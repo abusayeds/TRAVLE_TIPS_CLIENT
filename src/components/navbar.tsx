@@ -1,3 +1,4 @@
+"use client";
 import {
   Navbar as NextUINavbar,
   NavbarContent,
@@ -12,10 +13,14 @@ import { link as linkStyles } from "@nextui-org/theme";
 import NextLink from "next/link";
 import clsx from "clsx";
 
+import { useSingleUser } from "./hooks/user.hook";
+
 import { siteConfig } from "@/src/config/site";
 import { ThemeSwitch } from "@/src/components/theme-switch";
 
 export const Navbar = () => {
+  const { data } = useSingleUser();
+
   return (
     <NextUINavbar
       className=" fixed top-0 z-50 w-full "
@@ -52,12 +57,21 @@ export const Navbar = () => {
       >
         <NavbarItem className="hidden sm:flex gap-2">
           <ThemeSwitch />
-          <Link href="/profile" className=" text-white">Profile </Link>
+          {data?.data?.email ? (
+            <Link href="/profile">Profile</Link>
+          ) : (
+            <Link href="login">Login </Link>
+          )}
         </NavbarItem>
       </NavbarContent>
 
       <NavbarContent className="sm:hidden basis-1 pl-4" justify="end">
-        <p>profile</p>
+        {data?.data?.email ? (
+          <Link href="/profile">Profile</Link>
+        ) : (
+          <Link href="login">Login </Link>
+        )}
+
         <ThemeSwitch />
         <NavbarMenuToggle />
       </NavbarContent>

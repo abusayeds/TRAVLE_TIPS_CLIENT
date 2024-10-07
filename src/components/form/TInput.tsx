@@ -10,7 +10,7 @@ interface IProps extends IInput {}
 
 export default function TInput({
   variant = "bordered",
-  size = "md",
+  size = "sm",
   required = false,
   type = "text",
   defaultValue,
@@ -27,6 +27,7 @@ export default function TInput({
     <div className="relative w-full">
       <Input
         {...register(name)}
+        className="  border-gray-00"
         defaultValue={defaultValue}
         isInvalid={!!errors[name]}
         label={label}

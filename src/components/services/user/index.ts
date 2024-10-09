@@ -29,21 +29,21 @@ export const updataUser = async (userData: FieldValues): Promise<any> => {
     throw new Error(error);
   }
 };
-export const singleUser = async () => {
-  let token = null;
+// export const singleUser = async () => {
+//   let token = null;
 
-  try {
-    const accessToken = cookies().get("accessToken")?.value;
+//   try {
+//     const accessToken = cookies().get("accessToken")?.value;
 
-    if (accessToken) {
-      token = jwtDecode<CustomJwtPayload>(accessToken);
-    }
-    const { data } = await axiosInastances.get(
-      `/single-user/${token?.user?._id}`,
-    );
+//     if (accessToken) {
+//       token = jwtDecode<CustomJwtPayload>(accessToken);
+//     }
+//     const { data } = await axiosInastances.get(
+//       `/single-user/${token?.user?._id}`,
+//     );
 
-    return data;
-  } catch (error: any) {
-    throw new Error(error);
-  }
-};
+//     return data;
+//   } catch (error: any) {
+//     throw new Error(error);
+//   }
+// };

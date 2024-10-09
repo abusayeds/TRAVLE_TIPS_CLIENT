@@ -37,7 +37,7 @@ type Tcommmon = {
   __v?: number;
 };
 export interface IUser {
-    decodedToken?: {
+    data?: {
     _id: string;
     name: string;
     role: string;
@@ -46,8 +46,8 @@ export interface IUser {
     userEmail?: string;
     password?: string;
     address?: string;
-    followersCount?: number;
-    followingCount?: number;
+    follower?: Tcommmon[];
+    following?: Tcommmon[];
     status: string;
     passwordChangedAt?: Date;
     mobileNumber?: string;
@@ -79,16 +79,18 @@ export interface IUser {
 //   };
 } 
 export interface TPost  {
+    data : any
     _id: string;
-    user: string;
+    user: Tcommmon;
     category: string;
     title: string;
     description: string;
     upvoteCount: number;
     downvoteCount: number;
+    totalVote: number;
     images: string[];
-    comments: string[]; // If the comments have more structure, replace with appropriate type.
-    status: "AVAILABLE" | "UNAVAILABLE"; // Assuming these are the only possible values.
+    comments: string[]; 
+    status: "AVAILABLE" | "UNAVAILABLE"; 
     createdAt: string;
     updatedAt: string;
     __v: number;

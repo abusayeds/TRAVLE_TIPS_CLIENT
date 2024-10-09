@@ -1,19 +1,42 @@
 "use client";
 
-import { useAllPost } from "@/src/components/hooks/post.hook";
+import axios from "axios";
+import { useEffect, useState } from "react";
+
 import Post from "@/src/components/Ul/post/Post";
-import { IReceivedPost } from "@/src/types";
+import { getToken } from "@/src/components/utils/getToken";
+import { baseAPI } from "@/src/config/envConfig";
+import { IReceivedPost, TPost } from "@/src/types";
 
-export default function AboutPage() {
-  const { data } = useAllPost();
-
+export default function NewsFeed() {
+  const [data, setData] = useState<TPost | null>(null);
   const posts = data?.data || [];
+
+  const fetchPost = async () => {
+    const token = await getToken();
+
+    try {
+      const { data } = await axios.get(`${baseAPI}/all-post?sort=-totalVote`, {
+        headers: {
+          Authorization: token as string,
+        },
+      });
+
+      setData(data);
+    } catch (error) {
+      console.error("Failed to fetch votes", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchPost();
+  }, []);
 
   return (
     <div className=" flex flex-col gap-y-6  ">
-      {posts?.length ? (
+      {posts.length ? (
         posts.map((post: IReceivedPost, index: number) => (
-          <Post key={index} post={post} />
+          <Post key={index} fetchPost={fetchPost} post={post} />
         ))
       ) : (
         <div className="flex min-h-screen w-full items-center justify-center rounded-md bg-default-100">

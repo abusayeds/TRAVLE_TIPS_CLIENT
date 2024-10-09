@@ -1,21 +1,21 @@
 "use client";
-import React, { useRef, useState } from "react";
+import React, { useState } from "react";
 import { Editor } from "@tinymce/tinymce-react";
 import axios from "axios";
-import { useRouter } from "next/navigation";
+import { toast } from "sonner";
+
+import { getToken } from "../../utils/getToken";
+import { delay } from "../../utils/delay";
 
 import Loading from "@/src/components/loading";
-import { CLIENT_API_KEY } from "@/src/config/envConfig";
-import { useAddPost } from "@/src/components/hooks/post.hook";
-const PostCreationModal = ({ isVisible, onClose }: any) => {
-  const formRef = useRef<HTMLFormElement>(null);
-  const router = useRouter();
+import { baseAPI, CLIENT_API_KEY } from "@/src/config/envConfig";
+
+const EditPost = ({ isVisible, onClose, post }: any) => {
   const [ImgUploadLoading, setImgUploadloding] = useState(false);
-  const [content, setContent] = useState("");
-  const [category, setCategory] = useState("");
-  const [title, setTitle] = useState("");
-  const [image, setImage] = useState<string[] | []>([]);
-  const { mutate: addPost } = useAddPost();
+  const [content, setContent] = useState(post.description);
+  const [category, setCategory] = useState(post.category);
+  const [title, setTitle] = useState(post.title);
+  const [image, setImage] = useState<string[]>(post.images);
 
   const handleEditorChange = (content: any) => {
     setContent(content);
@@ -44,7 +44,8 @@ const PostCreationModal = ({ isVisible, onClose }: any) => {
     }
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
+    const token = await getToken();
     const postData = {
       category: category,
       title: title,
@@ -52,14 +53,19 @@ const PostCreationModal = ({ isVisible, onClose }: any) => {
       images: image,
     };
 
-    addPost(postData);
-
+    await axios.put(`${baseAPI}/updata-post/${post._id}`, postData, {
+      headers: {
+        Authorization: token as string,
+      },
+    });
+    toast.promise(
+      delay(2), // Your promise-based function goes here
+      {
+        success: "Post successfully updated 👌",
+        error: "Failed to update the post",
+      },
+    );
     onClose();
-    router.push("/profile");
-    setImage([]);
-    setCategory("");
-    setContent("");
-    setTitle("");
   };
 
   if (!isVisible) return null;
@@ -68,10 +74,10 @@ const PostCreationModal = ({ isVisible, onClose }: any) => {
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-60 font-titlefont">
       {ImgUploadLoading && <Loading />}
       <div className="bg-white relative rounded-lg shadow-lg p-6 w-11/12 md:w-2/3 lg:w-1/2 max-h-[90vh] overflow-auto">
-        <h2 className=" text-black text-xl  font-serif mb-4">
-          Create Travel Post
+        <h2 className=" text-black text-xl   font-serif mb-4">
+          Edit your post
         </h2>
-        <p className=" text-black block mb-2 font-medium">Title:</p>
+        <p className=" text-black block text-start  mb-2 font-medium">Title:</p>
         <input
           className="w-full p-2 border text-black bg-white border-gray-300 rounded mb-4"
           placeholder="Post Title"
@@ -80,7 +86,9 @@ const PostCreationModal = ({ isVisible, onClose }: any) => {
           onChange={(e) => setTitle(e.target.value)}
         />
 
-        <p className="text-black block mb-2 font-medium">Category:</p>
+        <p className="text-black text-start block mb-2 font-medium">
+          Category:
+        </p>
         <select
           className=" w-full p-2 border bg-white text-black  border-gray-300 rounded mb-4"
           value={category}
@@ -94,7 +102,7 @@ const PostCreationModal = ({ isVisible, onClose }: any) => {
           <option value="Exploration">Exploration</option>
         </select>
 
-        <p className=" text-black block mb-2 font-medium">
+        <p className=" text-black font-semibold block m-4 ">
           Write tips, guides, and stories or other
         </p>
         <Editor
@@ -116,12 +124,13 @@ const PostCreationModal = ({ isVisible, onClose }: any) => {
           value={content}
           onEditorChange={handleEditorChange}
         />
-        <div className="mt-5 grid  md:grid-cols-3 gap-2 ">
+
+        <div className="mt-5 grid  md:grid-cols-3 gap-2">
           {image.map((img, index) => (
             <img
               key={index}
               alt=""
-              className={`${image ? " border-dashed border-1 rounded-lg border-indigo-600 w-full h-36 p-1 " : ""} `}
+              className={`border-dashed border-1 rounded-lg border-indigo-600 w-full h-36 p-1`}
               src={img}
             />
           ))}
@@ -131,7 +140,7 @@ const PostCreationModal = ({ isVisible, onClose }: any) => {
             className="text-xs bg-gray-600 hover:bg-gray-700 w-full duration-500 rounded-sm font-sans p-2 text-white cursor-pointer"
             htmlFor="file_input"
           >
-            Upload Image
+            Change Image
           </label>
           <input
             multiple
@@ -153,7 +162,7 @@ const PostCreationModal = ({ isVisible, onClose }: any) => {
             className="px-3 py-2 text-xs bg-blue-500 text-white rounded hover:bg-blue-700 duration-500"
             onClick={() => handleSubmit()}
           >
-            Submit Post
+            Updata Post
           </button>
         </div>
         <button
@@ -167,4 +176,4 @@ const PostCreationModal = ({ isVisible, onClose }: any) => {
   );
 };
 
-export default PostCreationModal;
+export default EditPost;

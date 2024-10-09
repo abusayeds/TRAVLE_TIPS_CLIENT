@@ -4,6 +4,7 @@ import Link from "next/link";
 import React, { useState } from "react";
 import { FieldValues, SubmitHandler } from "react-hook-form";
 import axios from "axios";
+import { useRouter } from "next/navigation";
 
 import TInput from "@/src/components/form/TInput";
 import TForm from "@/src/components/form/TForm";
@@ -16,7 +17,7 @@ const Register = () => {
   const [ImgUploadLoading, setImgUploadloding] = useState(false);
   const { mutate: handleRegister } = useUserRegistration();
   const [profileImg, setProfileIMg] = useState("");
-
+  const router = useRouter();
   const hendleSummit: SubmitHandler<FieldValues> = async (data) => {
     const userData = {
       ...data,
@@ -24,6 +25,7 @@ const Register = () => {
     };
 
     handleRegister(userData);
+    router.push("/login");
   };
   const profileImageUpload = async (e: any) => {
     setProfileImgName(e.name);

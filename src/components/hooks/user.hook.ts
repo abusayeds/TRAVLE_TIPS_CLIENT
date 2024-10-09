@@ -1,8 +1,8 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import { FieldValues } from "react-hook-form";
 import { toast } from "sonner";
 
-import { singleUser, updataUser } from "../services/user";
+import { updataUser } from "../services/user";
 
 export const useUpdateUser = () => {
   return useMutation<any, Error, FieldValues>({
@@ -14,11 +14,5 @@ export const useUpdateUser = () => {
     onError: (error) => {
       toast.error(error.message);
     },
-  });
-};
-export const useSingleUser = () => {
-  return useQuery({
-    queryKey: ["SINGLE_USER"],
-    queryFn: async () => await singleUser(),
   });
 };

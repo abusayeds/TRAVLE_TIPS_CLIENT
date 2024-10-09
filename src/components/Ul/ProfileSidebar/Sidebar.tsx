@@ -6,12 +6,12 @@ import { usePathname, useRouter } from "next/navigation";
 import { FaCamera } from "react-icons/fa";
 import axios from "axios";
 import { useState } from "react";
-import { FaUserPlus } from "react-icons/fa";
 
 import Loading from "../../loading";
 import { logout } from "../../services/authServices";
-import { useUser } from "../../context.providet";
-import { useSingleUser, useUpdateUser } from "../../hooks/user.hook";
+import { useUser } from "../../context/context.providet";
+import { useUpdateUser } from "../../hooks/user.hook";
+import { useMyPost } from "../../hooks/post.hook";
 
 import { SidebarOptions } from "./SideberOptions";
 import { adminLinks, userLinks } from "./constant";
@@ -21,21 +21,22 @@ import { CLIENT_API_KEY } from "@/src/config/envConfig";
 import PostCreationModal from "@/src/app/(withCommonLayout)/(user)/profile/create-post/page";
 
 const Sideber = () => {
-  const [ImgUploadLoading, setImgUploadloding] = useState(false);
-  const pathName = usePathname();
+  const { user, setIsLoading, reFactehUser } = useUser();
+  const { data } = useMyPost();
 
   const router = useRouter();
-  const { user, setIsLoading: userLoading } = useUser();
-
-  const { data: singleuser } = useSingleUser();
-
+  const [ImgUploadLoading, setImgUploadloding] = useState(false);
+  const pathName = usePathname();
   const [isModalVisible, setIsModalVisible] = useState(false);
 
   const { mutate: updateUser } = useUpdateUser();
 
   const handleLogOut = () => {
     logout();
-    userLoading(true);
+    localStorage.removeItem("voteStatus");
+
+    setIsLoading(true);
+    reFactehUser();
     if (protectedRoutes.some((route) => pathName.match(route))) {
       router.push("/");
     }
@@ -49,7 +50,7 @@ const Sideber = () => {
     try {
       const res = await axios.post(
         `https://api.imgbb.com/1/upload?key=${CLIENT_API_KEY}`,
-        formData,
+        formData
       );
 
       if (res.data.success) {
@@ -57,12 +58,12 @@ const Sideber = () => {
           profilePhoto: res.data.data.url,
         };
         const userData = {
-          id: user?.decodedToken?.user?._id,
+          id: user?.data?._id,
           imgURL,
         };
 
         updateUser(userData);
-
+        reFactehUser();
         setImgUploadloding(false);
       }
     } catch (err) {
@@ -77,7 +78,7 @@ const Sideber = () => {
     try {
       const res = await axios.post(
         `https://api.imgbb.com/1/upload?key=${CLIENT_API_KEY}`,
-        formData,
+        formData
       );
 
       if (res.data.success) {
@@ -85,11 +86,12 @@ const Sideber = () => {
           coverPhoto: res.data.data.url,
         };
         const userData = {
-          id: user?.decodedToken?.user?._id,
+          id: user?.data?._id,
           imgURL,
         };
 
         updateUser(userData);
+        reFactehUser();
         setImgUploadloding(false);
       }
     } catch (err) {
@@ -102,6 +104,8 @@ const Sideber = () => {
 
   const closeModal = () => {
     setIsModalVisible(false);
+    router.push("/profile");
+    reFactehUser();
   };
 
   return (
@@ -117,21 +121,21 @@ const Sideber = () => {
                 alt="Mountain"
                 className="h-full w-full object-cover"
                 src={
-                  singleuser?.data?.coverPhoto ||
+                  user?.data?.coverPhoto ||
                   "https://i.ibb.co.com/qsP8FjL/No-image-available.png"
                 }
               />
 
               <input
                 accept="image/*"
-                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                className="absolute inset-0 w-full h-full opacity-0 "
                 id="coverimageUpload"
                 type="file"
                 onChange={(e) => uploadCoverImage(e.target.files?.[0])}
               />
 
               <FaCamera
-                className="absolute right-6 bottom-1  bg-white p-1 rounded text-gray-600 hover:text-gray-700 duration-500  w-8 h-8 cursor-pointer"
+                className="absolute right-6 bottom-1  bg-white p-1 rounded text-gray-600 hover:text-gray-700 duration-500  w-8 h-8 "
                 onClick={() => {
                   const fileInput = document.getElementById("coverimageUpload");
 
@@ -147,13 +151,13 @@ const Sideber = () => {
                 alt="Woman looking front"
                 className="object-cover object-center h-32"
                 src={
-                  singleuser?.data?.profilePhoto ||
+                  user?.data?.profilePhoto ||
                   "https://i.ibb.co.com/qsP8FjL/No-image-available.png"
                 }
               />
               <input
                 accept="image/*"
-                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                className="absolute inset-0 w-full h-full opacity-0 "
                 id="profile"
                 type="file"
                 onChange={(e) => uploadProfileImage(e.target.files?.[0])}
@@ -174,27 +178,26 @@ const Sideber = () => {
                 <div>
                   <p className="text-2xl   font-bodyfont font-semibold">
                     {" "}
-                    {singleuser?.data?.name}
+                    {user?.data?.name}
                   </p>
-                </div>
-                <div>
-                  <button className="flex font-titlefont  items-center border-2 border-gray-500 font-semibold  px-3 text-sm rounded-md  transition-colors duration-300">
-                    <FaUserPlus className="mr-1" /> Follow
-                  </button>
                 </div>
               </div>
               <div className="break-words  md:text-sm flex md:gap-5 gap-x-2">
-                <p className="text-sm">
-                  <span className="  underline"> Post </span> <span>1</span>
-                </p>
-                <p className="text-sm">
+                <Link className="text-sm" href={"/profile"}>
+                  <span className="  underline">
+                    {" "}
+                    Post {data?.data?.length}{" "}
+                  </span>
+                </Link>
+                <Link className="text-sm" href={"/profile/follower"}>
                   <span className=" underline"> Followers</span>{" "}
-                  <span>10K</span>
-                </p>
-                <p className="text-sm">
-                  <span className=" underline"> Following </span>{" "}
-                  <span>10</span>
-                </p>
+                  <span>{user?.data?.follower?.length}</span>
+                </Link>
+                <Link className="text-sm" href={"/profile/following"}>
+                  <span className=" underline">
+                    Following {user?.data?.following?.length}{" "}
+                  </span>{" "}
+                </Link>
               </div>
             </div>
           </div>
@@ -230,7 +233,7 @@ const Sideber = () => {
       </div>
       <div className="mt-3 space-y-2 rounded-xl bg-default-300 p-2">
         <SidebarOptions
-          links={singleuser?.data?.role === "USER" ? userLinks : adminLinks}
+          links={user?.data?.role === "USER" ? userLinks : adminLinks}
         />
 
         <Button

@@ -4,7 +4,7 @@ import Sideber from "@/src/components/Ul/ProfileSidebar/Sidebar";
 
 const Layout = ({ children }: { children: ReactNode }) => {
   return (
-    <main className="mb-20 md:flex w-full gap-12 md:h-screen">
+    <main className="mb-20 md:flex w-full gap-12 md:h-screen mx-auto">
       <div className="md:w-2/5 ">
         <Sideber />
       </div>

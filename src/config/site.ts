@@ -21,8 +21,8 @@ export const siteConfig = {
       href: "/blog",
     },
     {
-        label: "News Feed",
-        href: "/newsFeed",
+      label: "News Feed",
+      href: "/newsFeed",
     },
   ],
   navMenuItems: [

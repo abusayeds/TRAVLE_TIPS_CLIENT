@@ -1,17 +1,20 @@
 /* eslint-disable prettier/prettier */
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { useRouter } from "next/navigation";
 
 import { CLIENT_API_KEY } from "@/src/config/envConfig";
 import Loading from "@/src/components/loading";
-import { useSingleUser, useUpdateUser } from "@/src/components/hooks/user.hook";
+import { useUpdateUser } from "@/src/components/hooks/user.hook";
+import { useUser } from "@/src/components/context/context.providet";
 
 const EditProfile = () => {
-  const { data, isLoading,  } = useSingleUser();
-  const {mutate :updateUser } = useUpdateUser() 
-  const [profleImg, setProfileImg] = useState();
+  const { user, setIsLoading, isLoading, reFactehUser } = useUser();
   const [ImgUploadLoading, setImgUploadloding] = useState(false);
+  const router = useRouter();
+  const [profleImg, setProfileImg] = useState();
+  const { mutate: updateUser } = useUpdateUser();
 
   const hendleSummit = async (event: any) => {
     event.preventDefault();
@@ -22,9 +25,11 @@ const EditProfile = () => {
       mobileNumber: form?.phone?.value,
       profilePhoto: profleImg,
     };
-    
 
     updateUser(userData);
+    setIsLoading(!isLoading);
+    reFactehUser();
+    router.push("/profile");
   };
   const uploadProfileImage = async (e: any) => {
     setImgUploadloding(true);
@@ -50,11 +55,15 @@ const EditProfile = () => {
     }
   };
 
+  useEffect(() => {
+    reFactehUser();
+  }, []);
+
   return (
     <div>
       <div className="font-[sans-serif]">
         {ImgUploadLoading && <Loading />}
-        {isLoading && <Loading />}
+
         <div className="">
           <div className="">
             <div className="">
@@ -71,7 +80,7 @@ const EditProfile = () => {
 
                     <input
                       className=" focus:outline-none border-2  border-gray-500 rounded-lg p-1 w-full"
-                      defaultValue={data?.data?.name}
+                      defaultValue={user?.data?.name}
                       name="name"
                       type="text"
                     />
@@ -82,7 +91,7 @@ const EditProfile = () => {
                   <div className="flex  items-center">
                     <input
                       className=" focus:outline-none border-2  border-gray-500 rounded-lg p-1 w-full"
-                      defaultValue={data?.data?.email}
+                      defaultValue={user?.data?.email}
                       name="email"
                       type="email"
                     />
@@ -94,7 +103,7 @@ const EditProfile = () => {
                   <div className="flex items-center">
                     <input
                       className=" focus:outline-none border-2  border-gray-500 rounded-lg p-1 w-full"
-                      defaultValue={data?.data?.mobileNumber}
+                      defaultValue={user?.data?.mobileNumber}
                       name="phone"
                       type="text"
                     />

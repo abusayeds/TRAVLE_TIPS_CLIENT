@@ -7,8 +7,9 @@ import { ThemeProvider as NextThemesProvider } from "next-themes";
 import { ThemeProviderProps } from "next-themes/dist/types";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "sonner";
+import UserProvider from "../components/context/context.providet";
 
-import UserProvider from "../components/context.providet";
+
 
 export interface ProvidersProps {
   children: React.ReactNode;

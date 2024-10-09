@@ -308,14 +308,18 @@ const Post = ({ post, fetchPost }: TProps) => {
                 <BiLike className="text-xl" />
               </button>
 
-              <button
-                className={`p-1 border flex gap-1 rounded-full justify-items-center ${
-                  hasVoted === "downvoted" ? "bg-red-600 text-white" : ""
-                }`}
-                onClick={() => handleDownvote(post._id)}
-              >
-                <BiDislike className="text-xl" />
-              </button>
+              {totalVotes === 0 ? (
+                ""
+              ) : (
+                <button
+                  className={`p-1 border flex gap-1 rounded-full justify-items-center ${
+                    hasVoted === "downvoted" ? "bg-red-600 text-white" : ""
+                  }`}
+                  onClick={() => handleDownvote(post._id)}
+                >
+                  <BiDislike className="text-xl" />
+                </button>
+              )}
             </div>
             <span className="text-1xl font-extrabold">
               {totalVotes}{" "}
@@ -332,7 +336,7 @@ const Post = ({ post, fetchPost }: TProps) => {
               }}
               className=" flex items-center gap-2"
             >
-              <small className=" font-bodyfont" >Comment</small>
+              <small className=" font-bodyfont">Comment</small>
               <FaRegComment />
             </button>
           </div>

@@ -5,8 +5,9 @@ import { MdEdit } from "react-icons/md";
 import { usePathname, useRouter } from "next/navigation";
 import { FaCamera } from "react-icons/fa";
 import axios from "axios";
-import { useState } from "react";
-
+import { useEffect, useState } from "react";
+import { TbPremiumRights } from "react-icons/tb";
+import { RiVerifiedBadgeFill } from "react-icons/ri";
 import Loading from "../../loading";
 import { logout } from "../../services/authServices";
 import { useUser } from "../../context/context.providet";
@@ -17,12 +18,23 @@ import { SidebarOptions } from "./SideberOptions";
 import { adminLinks, userLinks } from "./constant";
 
 import { protectedRoutes } from "@/src/constant";
-import { CLIENT_API_KEY } from "@/src/config/envConfig";
+import { baseAPI, CLIENT_API_KEY } from "@/src/config/envConfig";
 import PostCreationModal from "@/src/app/(withCommonLayout)/(user)/profile/create-post/page";
 
 const Sideber = () => {
   const { user, setIsLoading, reFactehUser } = useUser();
   const { data } = useMyPost();
+  const [subTotalVote, setSubTotalVote] = useState(0);
+
+  useEffect(() => {
+    if (data?.data && Array.isArray(data.data)) {
+      const total = data.data.reduce((acc: any, item: any) => {
+        return acc + (item.totalVote || 0);
+      }, 0);
+      setSubTotalVote(total);
+    }
+    reFactehUser();
+  }, [data]);
 
   const router = useRouter();
   const [ImgUploadLoading, setImgUploadloding] = useState(false);
@@ -108,6 +120,17 @@ const Sideber = () => {
     reFactehUser();
   };
 
+  const handlePayment = async (id: any) => {
+    const res = await fetch(`${baseAPI}/payment/${id}`, {
+      method: "POST",
+    });
+    const data = await res.json();
+
+    if (data?.success) {
+      window.location.href = data?.data?.payment_url;
+    }
+  };
+
   return (
     <div>
       {/* {isPending && <Loading />} */}
@@ -175,12 +198,27 @@ const Sideber = () => {
             </div>
             <div className=" flex flex-col gap-y-3 p-2">
               <div className=" flex flex-col gap-y-2">
-                <div>
-                  <p className="text-2xl   font-bodyfont font-semibold">
-                    {" "}
+                <div className=" flex gap-3 items-center ">
+                  <p className="text-2xl font-serif font-semibold">
                     {user?.data?.name}
                   </p>
+
+                  {user?.data?.status === "BLOCKED" && (
+                    <RiVerifiedBadgeFill className=" text-blue-700 text-lg" />
+                  )}
                 </div>
+                {user?.data?.status !== "BLOCKED" && (
+                  <div>
+                    {subTotalVote > 0 && (
+                      <button
+                        onClick={() => handlePayment(user?.data?._id)}
+                        className=" flex items-center w-24 gap-1 rounded bg-black text-white text-xs px-2 py-[0.5]"
+                      >
+                        Premium <TbPremiumRights />{" "}
+                      </button>
+                    )}
+                  </div>
+                )}
               </div>
               <div className="break-words  md:text-sm flex md:gap-5 gap-x-2">
                 <Link className="text-sm" href={"/profile"}>

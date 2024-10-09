@@ -22,12 +22,17 @@ interface IUserProviderValues {
   setUser: (user: IUser | null) => void;
   setIsLoading: Dispatch<SetStateAction<boolean>>;
   reFactehUser: () => Promise<void>;
+  search: boolean;
+  setSearch: Dispatch<SetStateAction<boolean>>;
 }
 const UserContext = createContext<IUserProviderValues | null>(null);
 
 const UserProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<IUser | null>(null);
 
+  const [search, setSearch] = useState(false);
+
+  
   const [isLoading, setIsLoading] = useState(true);
 
   const reFactehUser = async () => {
@@ -53,10 +58,10 @@ const UserProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     reFactehUser();
   }, []);
-
+ 
   return (
     <UserContext.Provider
-      value={{ reFactehUser, user, setUser, isLoading, setIsLoading }}
+      value={{ reFactehUser, user, setUser, isLoading, setIsLoading, search , setSearch}}
     >
       {children}
     </UserContext.Provider>

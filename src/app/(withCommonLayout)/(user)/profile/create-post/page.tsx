@@ -1,5 +1,5 @@
 "use client";
-import React, { useRef, useState } from "react";
+import React, { useState } from "react";
 import { Editor } from "@tinymce/tinymce-react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
@@ -8,7 +8,7 @@ import Loading from "@/src/components/loading";
 import { CLIENT_API_KEY } from "@/src/config/envConfig";
 import { useAddPost } from "@/src/components/hooks/post.hook";
 const PostCreationModal = ({ isVisible, onClose }: any) => {
-  const formRef = useRef<HTMLFormElement>(null);
+  
   const router = useRouter();
   const [ImgUploadLoading, setImgUploadloding] = useState(false);
   const [content, setContent] = useState("");

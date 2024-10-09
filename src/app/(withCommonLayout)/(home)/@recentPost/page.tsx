@@ -1,11 +1,10 @@
 import React from "react";
+import NewsFeed from "../../newsFeed/page";
 
 const page = () => {
   return (
     <div>
-      <p className=" text-center">
-        ai khan a recent kicu post dakhano hba ,, home er nica{" "}
-      </p>
+      <NewsFeed></NewsFeed>
     </div>
   );
 };

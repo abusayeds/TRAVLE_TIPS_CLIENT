@@ -32,6 +32,7 @@ export default function NewsFeed() {
     fetchPost();
   }, []);
 
+
   return (
     <div className=" flex flex-col gap-y-6  ">
       {posts.length ? (

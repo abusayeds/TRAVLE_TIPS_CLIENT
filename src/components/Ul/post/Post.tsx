@@ -5,7 +5,10 @@ import { BiDislike } from "react-icons/bi";
 import axios from "axios";
 import { toast } from "sonner";
 import { FaUserPlus } from "react-icons/fa";
-
+import { IoIosSend } from "react-icons/io";
+import { CiEdit } from "react-icons/ci";
+import { MdDelete } from "react-icons/md";
+import { FaRegComment } from "react-icons/fa";
 import { getToken } from "../../utils/getToken";
 import { delay } from "../../utils/delay";
 import { useUser } from "../../context/context.providet";
@@ -18,12 +21,17 @@ import { baseAPI } from "@/src/config/envConfig";
 
 type TProps = {
   post: IReceivedPost;
-  fetchPost: () => Promise<void>; // Add fetchPost to the props type
+  fetchPost: () => Promise<void>;
 };
 
 const Post = ({ post, fetchPost }: TProps) => {
   const { user } = useUser();
-
+  const [commentInput, setCommentInput] = useState(false);
+  const [editComment, setEditComment] = useState(false);
+  const [editCommentValue, setEditCommentValue] = useState("");
+  const [userComment, setUserComment] = useState("");
+  const [preComment, setPreComment] = useState("");
+  const [commentId, setCommentId] = useState("");
   const localStorageKey = `isFollowing_${post?.user?._id}`;
   const [isFollowing, setIsFollowing] = useState<boolean>(() => {
     const savedStatus = localStorage.getItem(localStorageKey);
@@ -145,8 +153,56 @@ const Post = ({ post, fetchPost }: TProps) => {
     setIsFollowing(false);
   };
 
+  const handleCommentClick = () => {
+    setCommentInput(!commentInput);
+  };
+  const handleEdit = () => {
+    setEditComment(!editComment);
+  };
+  const handleCommentadd = async (id: string) => {
+    const token = await getToken();
+    const Data = {
+      userId: id,
+      userComment: userComment,
+    };
+
+    await axios.put(`${baseAPI}/add-comment/${post._id}`, Data, {
+      headers: {
+        Authorization: token as string,
+      },
+    });
+    fetchPost();
+    toast.message("commment added ! ");
+  };
+  const handleCommentDelete = async (commentId: string) => {
+    const token = await getToken();
+
+    await axios.delete(`${baseAPI}/delete-comment/${post._id}/${commentId}`, {
+      headers: {
+        Authorization: token as string,
+      },
+    });
+    fetchPost();
+    toast.message("commment deleted");
+  };
+  const handleCommentaEdit = async () => {
+    const token = await getToken();
+
+    await axios.put(
+      `${baseAPI}/edit-comment/${post._id}/${commentId}`,
+      { userComment: editCommentValue },
+      {
+        headers: {
+          Authorization: token as string,
+        },
+      }
+    );
+    fetchPost();
+    toast.message("commment undated");
+  };
+
   return (
-    <div className=" flex flex-col gap-4 rounded-lg shadow-md border p-4 font-titlefont">
+    <div className="flex flex-col gap-4 rounded-lg shadow-md border p-4 font-titlefont">
       <EditPost
         isVisible={isEditModalVisible}
         post={post}
@@ -157,30 +213,29 @@ const Post = ({ post, fetchPost }: TProps) => {
         postId={post._id}
         onClose={closeDeleteModal}
       />
-      <div className="flex justify-between ">
-        <div className="flex items-center ">
+      <div className="flex justify-between">
+        <div className="flex items-center">
           <img
-            alt="Profil"
-            className=" h-10 w-10 md:w-12 md:h-12 rounded-full mr-3"
-            src="https://i.ibb.co.com/VDXy8gH/o.jpg"
+            alt="Profile"
+            className="h-10 w-10 md:w-12 md:h-12 rounded-full mr-3"
+            src={post?.user?.profilePhoto}
           />
-          <div className=" flex flex-col gap-y-1 justify-start">
-            <h2 className=" text-sm md:text-lg font-semibold  font-serif">
+          <div className="flex flex-col gap-y-1 justify-start">
+            <h2 className="text-sm md:text-lg font-semibold font-serif">
               {post?.user?.name}
             </h2>
             {user?.data?.email !== post.user.email && (
               <div>
-                {" "}
                 {isFollowing ? (
                   <button
-                    className="flex items-center justify-center gap-1 border  text-xs font-semibold  border-gray-300 transition duration-300 ease-in-out w-20 px-3 py-1 rounded-md shadow-sm"
+                    className="flex items-center justify-center gap-1 border text-xs font-semibold border-gray-300 transition duration-300 ease-in-out w-20 px-3 py-1 rounded-md shadow-sm"
                     onClick={handleUnfollowClick}
                   >
                     Unfollow
                   </button>
                 ) : (
                   <button
-                    className="flex items-center justify-center gap-1 border  text-xs font-semibold  border-gray-300 transition duration-300 ease-in-out w-20 px-3 py-1 rounded-md shadow-sm"
+                    className="flex items-center justify-center gap-1 border text-xs font-semibold border-gray-300 transition duration-300 ease-in-out w-20 px-3 py-1 rounded-md shadow-sm"
                     onClick={handleFollowClick}
                   >
                     <FaUserPlus />
@@ -193,18 +248,16 @@ const Post = ({ post, fetchPost }: TProps) => {
         </div>
 
         {user?.data?.email === post.user.email && (
-          <div className=" flex gap-2 md:gap-4 ">
+          <div className="flex gap-2 md:gap-4">
             <button
-              className=" mt-[0.5] underline text-blue-600"
-              onClick={() => {
-                openEditModal();
-              }}
+              className="mt-[0.5] underline text-blue-600"
+              onClick={openEditModal}
             >
               Edit
             </button>
             <button
-              className=" font-bold  text-red-600 "
-              onClick={() => openDeleteModal()}
+              className="font-bold text-red-600"
+              onClick={openDeleteModal}
             >
               X
             </button>
@@ -212,11 +265,11 @@ const Post = ({ post, fetchPost }: TProps) => {
         )}
       </div>
 
-      <div className=" text-start ">
+      <div className="text-start">
         <p>{post?.title}</p>
       </div>
 
-      <div className=" flex flex-col gap-2">
+      <div className="flex flex-col gap-2">
         <div className="w-full grid grid-cols-2 gap-4">
           {post?.images.length % 2 === 1 && (
             <div className="col-span-2">
@@ -239,11 +292,11 @@ const Post = ({ post, fetchPost }: TProps) => {
             ))}
         </div>
 
-        <div className=" text-start">
+        <div className="text-start">
           <p dangerouslySetInnerHTML={{ __html: post?.description }} />
         </div>
         <hr />
-        <div className=" flex justify-between items-center ">
+        <div className="flex justify-between items-center">
           <div className="flex items-center space-x-4">
             <div className="flex gap-x-1">
               <button
@@ -271,37 +324,96 @@ const Post = ({ post, fetchPost }: TProps) => {
           </div>
 
           <div>
-            <p className=" underline">comment</p>
+            <button
+              onClick={() => {
+                {
+                  handleCommentClick(), setEditComment(false);
+                }
+              }}
+              className=" flex items-center gap-2"
+            >
+              <small className=" font-bodyfont" >Comment</small>
+              <FaRegComment />
+            </button>
           </div>
+        </div>
+        <div
+          className={` relative transition-all duration-500 ease-in-out overflow-hidden ${
+            commentInput ? "max-h-20 opacity-100" : "max-h-0 opacity-0"
+          }`}
+        >
+          <input
+            className="mt-2 border p-2 w-full rounded"
+            type="text"
+            value={userComment}
+            onChange={(e) => setUserComment(e.target.value)}
+            placeholder="Type here..."
+          />
+          <IoIosSend
+            onClick={() => handleCommentadd(user?.data?._id as string)}
+            className={`absolute w-5 h-5 top-5 right-2.5  ${userComment !== "" && " text-blue-700"} `}
+          />
+        </div>
+        <div
+          className={` relative transition-all duration-500 ease-in-out overflow-hidden ${
+            editComment ? "max-h-20 opacity-100" : "max-h-0 opacity-0"
+          }`}
+        >
+          <input
+            className="mt-2 border p-2 w-full rounded"
+            type="text"
+            defaultValue={preComment}
+            onChange={(e) => setEditCommentValue(e.target.value)}
+          />
+          <IoIosSend
+            onClick={() => handleCommentaEdit()}
+            className={`absolute w-5 h-5 top-5 right-2.5  ${editCommentValue !== "" && " text-blue-700"} `}
+          />
         </div>
       </div>
 
-      {/* <!-- Comment Container --> */}
       <div>
-        <div className="flex w-full justify-between border rounded-md text-xs">
-          <div className="p-3 flex  gap-8  w-full h-auto items-center">
-            <div className="flex gap-1 items-center">
-              <img
-                alt=""
-                className="object-cover w-8 h-8 rounded-full border-2 border-emerald-400  shadow-emerald-400"
-                src="https://avatars.githubusercontent.com/u/22263436?v=4"
-              />
-              <h3 className=" font-bold">
-                User 1
-                <br />
-                <span className="text-sm text-gray-400 font-normal">
-                  Level 1
-                </span>
-              </h3>
-            </div>
-            <div>
-              <p className="text-gray-600 mt-2">this is sample commnent</p>
-              <button className="text-right text-blue-500">Reply</button>
-            </div>
-          </div>
-        </div>
+        <div className=" flex  flex-col gap-3 w-full justify-between   text-xs">
+          {post?.comments?.map((comment: any) => (
+            <div
+              key={comment._id}
+              className="p-3 flex gap-8 w-full h-auto border  rounded-md items-center"
+            >
+              <div className="  md:flex gap-2 items-center">
+                <img
+                  alt="Profile"
+                  className="h-10 w-10 
+                  rounded-full mr-3"
+                  src={comment?.userId?.profilePhoto}
+                />
+                <h3 className="font-bold text-xs md:my-0 mt-2  ">
+                  {comment?.userId?.name}
+                </h3>
+              </div>
+              <div className=" flex flex-col gap-2 justify-start items-start w-4/5 bg-default-100 p-2 max-h-40 overflow-y-auto">
+                <p>{comment?.userComment}</p>
+              </div>
 
-        {/* <!-- Comment Container --> */}
+              {user?.data?.email === comment.userId.email && (
+                <div className="flex gap-2">
+                  <CiEdit
+                    onClick={() => {
+                      handleEdit(),
+                        setCommentId(comment._id),
+                        setPreComment(comment?.userComment);
+                      setCommentInput(false);
+                    }}
+                    className=" text-lg text-blue-500"
+                  />
+                  <MdDelete
+                    onClick={() => handleCommentDelete(comment._id)}
+                    className=" text-lg text-red-500"
+                  />
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );

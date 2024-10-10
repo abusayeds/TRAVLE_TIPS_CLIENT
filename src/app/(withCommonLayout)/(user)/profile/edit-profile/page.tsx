@@ -28,7 +28,7 @@ const EditProfile = () => {
 
     updateUser(userData);
     setIsLoading(!isLoading);
-    reFactehUser();
+
     router.push("/profile");
   };
   const uploadProfileImage = async (e: any) => {
@@ -55,9 +55,7 @@ const EditProfile = () => {
     }
   };
 
-  useEffect(() => {
-    reFactehUser();
-  }, []);
+  useEffect(() => {}, []);
 
   return (
     <div>

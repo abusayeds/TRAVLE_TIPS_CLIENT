@@ -3,17 +3,18 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { FaSearch } from "react-icons/fa";
-import { motion, AnimatePresence } from "framer-motion";
 
 import Post from "@/src/components/Ul/post/Post";
 import { getToken } from "@/src/components/utils/getToken";
 import { baseAPI } from "@/src/config/envConfig";
 import { IReceivedPost, TPost } from "@/src/types";
 import { useUser } from "@/src/components/context/context.providet";
-const travelImages = [
-  { src: "image1.jpg", text: "Explore the mountains" },
-  { src: "image2.jpg", text: "Relax at the beach" },
-  { src: "image3.jpg", text: "Discover the city" },
+import Hero from "@/src/components/utils/Hero";
+import Link from "next/link";
+const images = [
+  { src: "/images/travel1.jpg", text: "Discover new places" },
+  { src: "/images/travel2.jpg", text: "Adventure awaits" },
+  { src: "/images/travel3.jpg", text: "Explore the world" },
 ];
 
 export default function NewsFeed() {
@@ -34,7 +35,7 @@ export default function NewsFeed() {
           headers: {
             Authorization: token as string,
           },
-        },
+        }
       );
 
       setData(data);
@@ -57,7 +58,7 @@ export default function NewsFeed() {
           headers: {
             Authorization: token as string,
           },
-        },
+        }
       );
 
       setSearchData(data);
@@ -68,7 +69,7 @@ export default function NewsFeed() {
           headers: {
             Authorization: token as string,
           },
-        },
+        }
       );
 
       setSearchData(data);
@@ -79,64 +80,12 @@ export default function NewsFeed() {
     fetchPost();
   }, []);
 
-  const [currentIndex, setCurrentIndex] = useState(0);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentIndex((prevIndex) =>
-        prevIndex === travelImages.length - 1 ? 0 : prevIndex + 1,
-      );
-    }, 4000); // 4 seconds interval
-
-    return () => clearInterval(interval);
-  }, []);
-
   return (
     <section>
       {posts.length === 0 && searchposts.length === 0 ? (
-        <section>
-          <div className="relative h-screen flex items-center justify-center">
-            {/* Background Image */}
-            <AnimatePresence exitBeforeEnter>
-              {travelImages.map((item, index) =>
-                index === currentIndex ? (
-                  <motion.div
-                    key={item.src}
-                    animate={{ opacity: 1 }}
-                    className="absolute inset-0"
-                    exit={{ opacity: 0 }}
-                    initial={{ opacity: 0 }}
-                    transition={{ duration: 0.8 }}
-                  >
-                    <img
-                      alt={item.text}
-                      className="w-full h-full object-cover"
-                      src={item.src}
-                    />
-                  </motion.div>
-                ) : null,
-              )}
-            </AnimatePresence>
-
-            {/* Text Section */}
-            <div className="absolute z-10 text-center">
-              <AnimatePresence exitBeforeEnter>
-                <motion.h1
-                  key={travelImages[currentIndex].text}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="text-white text-5xl md:text-7xl font-bold"
-                  exit={{ opacity: 0, y: -50 }}
-                  initial={{ opacity: 0, y: 50 }}
-                  transition={{ duration: 0.8 }}
-                >
-                  {travelImages[currentIndex].text}
-                </motion.h1>
-              </AnimatePresence>
-            </div>
-
-            {/* Overlay for better text visibility */}
-            <div className="absolute inset-0 bg-black opacity-30" />
-          </div>
+        <section className=" flex flex-col justify-center items-center">
+          <p className=" font-serif text-4xl text-red-600">There is no post hear !  😢 </p>
+          <Link className="bg-blue-400 p-2 mt-8 rounded text-white" href="/login"> Log in now </Link>
         </section>
       ) : (
         <main className="flex flex-col gap-y-2 relative">

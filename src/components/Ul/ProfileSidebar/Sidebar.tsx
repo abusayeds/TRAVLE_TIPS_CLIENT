@@ -23,7 +23,7 @@ import { baseAPI, CLIENT_API_KEY } from "@/src/config/envConfig";
 import PostCreationModal from "@/src/app/(withCommonLayout)/(user)/profile/create-post/page";
 
 const Sideber = () => {
-  const { user, setIsLoading, reFactehUser } = useUser();
+  const { user, setIsLoading, reFactehUser, setUser } = useUser();
   const { data } = useMyPost();
   const [subTotalVote, setSubTotalVote] = useState(0);
 
@@ -33,6 +33,7 @@ const Sideber = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
 
   const handleLogOut = () => {
+    
     logout();
     localStorage.removeItem("voteStatus");
 
@@ -52,7 +53,7 @@ const Sideber = () => {
     try {
       const res = await axios.post(
         `https://api.imgbb.com/1/upload?key=${CLIENT_API_KEY}`,
-        formData,
+        formData
       );
 
       if (res?.data?.success) {
@@ -67,7 +68,7 @@ const Sideber = () => {
             headers: {
               Authorization: token as string,
             },
-          },
+          }
         );
 
         if (response?.data?.success) {
@@ -88,7 +89,7 @@ const Sideber = () => {
     try {
       const res = await axios.post(
         `https://api.imgbb.com/1/upload?key=${CLIENT_API_KEY}`,
-        formData,
+        formData
       );
 
       if (res?.data?.success) {
@@ -103,7 +104,7 @@ const Sideber = () => {
             headers: {
               Authorization: token as string,
             },
-          },
+          }
         );
 
         if (response?.data?.success) {

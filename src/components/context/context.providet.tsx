@@ -16,6 +16,7 @@ import { verifyToken } from "../utils/VerifyToken";
 
 interface IUserProviderValues {
   user: IUser | null;
+  
   isLoading: boolean;
   setUser: (user: IUser | null) => void;
   setIsLoading: Dispatch<SetStateAction<boolean>>;

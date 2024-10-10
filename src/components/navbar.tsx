@@ -44,7 +44,7 @@ export const Navbar = () => {
               <NextLink
                 className={clsx(
                   linkStyles({ color: "foreground" }),
-                  "data-[active=true]:text-primary data-[active=true]:font-medium",
+                  "data-[active=true]:text-primary data-[active=true]:font-medium"
                 )}
                 color="foreground"
                 href={item.href}
@@ -65,7 +65,7 @@ export const Navbar = () => {
             <button onClick={() => setSearch(!search)}>Search</button>
           )}
           <ThemeSwitch />
-          {user?.data?.email ? (
+          {user ? (
             <Link href="/profile">Profile</Link>
           ) : (
             <Link href="/login">Login</Link>
@@ -78,7 +78,7 @@ export const Navbar = () => {
           <button onClick={() => setSearch(!search)}>Search</button>
         )}
 
-        {user?.data?.email ? (
+        {user ? (
           <Link href="/profile">Profile</Link>
         ) : (
           <Link href="/login">Login </Link>

@@ -9,8 +9,8 @@ const Follower = () => {
 
   return (
     <div className="bg-white  rounded-md w-full">
-      <p className=" text-center text-4xl font-serif  my-4">
-        Your Following is hear !{" "}
+      <p className=" text-center text-4xl text-blue-500 font-serif  my-4">
+        Your Follower is hear  !{" "}
       </p>
       <div className="overflow-x-auto">
         <div className="inline-block min-w-full shadow-md rounded-lg overflow-hidden">
@@ -70,7 +70,7 @@ const Follower = () => {
                 ))
               ) : (
                 <tr>
-                  <td colSpan="4" className="text-center py-5">
+                  <td className="text-center py-5" colSpan="4">
                     <p className="text-4xl text-red-600">
                       😞 There are no following here !
                     </p>

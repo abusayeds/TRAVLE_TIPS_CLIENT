@@ -20,7 +20,7 @@ import { siteConfig } from "@/src/config/site";
 import { ThemeSwitch } from "@/src/components/theme-switch";
 
 export const Navbar = () => {
-  const { user, reFactehUser, setSearch , search } = useUser();
+  const { user, reFactehUser, setSearch, search } = useUser();
 
   useEffect(() => {
     reFactehUser();
@@ -61,7 +61,7 @@ export const Navbar = () => {
         justify="end"
       >
         <NavbarItem className="hidden sm:flex md:gap-5">
-          <button onClick={() => setSearch(!search)}>Search</button>
+        {user?.data?.email  && <button onClick={() => setSearch(!search)}>Search</button>}
           <ThemeSwitch />
           {user?.data?.email ? (
             <Link href="/profile">Profile</Link>
@@ -72,7 +72,8 @@ export const Navbar = () => {
       </NavbarContent>
 
       <NavbarContent className="sm:hidden basis-1 pl-2" justify="end">
-        <button onClick={() => setSearch(!search)}>Search</button>
+        {user?.data?.email  && <button onClick={() => setSearch(!search)}>Search</button>}
+
         {user?.data?.email ? (
           <Link href="/profile">Profile</Link>
         ) : (

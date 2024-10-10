@@ -6,7 +6,7 @@ export const siteConfig = {
   navItems: [
     {
       label: "News Feed",
-      href: "/newsFeed",
+      href: "/newsfeeds",
     },
 
     {
@@ -20,18 +20,18 @@ export const siteConfig = {
   ],
   navMenuItems: [
     {
-        label: "News Feed",
-        href: "/newsFeed",
-      },
-  
-      {
-        label: "About",
-        href: "/about",
-      },
-      {
-        label: "Contact",
-        href: "/contact",
-      },
+      label: "News Feed",
+      href: "/newsfeeds",
+    },
+
+    {
+      label: "About",
+      href: "/about",
+    },
+    {
+      label: "Contact",
+      href: "/contact",
+    },
   ],
   links: {
     github: "https://github.com/nextui-org/nextui",

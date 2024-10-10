@@ -9,6 +9,7 @@ import { IoIosSend } from "react-icons/io";
 import { CiEdit } from "react-icons/ci";
 import { MdDelete } from "react-icons/md";
 import { FaRegComment } from "react-icons/fa";
+
 import { getToken } from "../../utils/getToken";
 import { delay } from "../../utils/delay";
 import { useUser } from "../../context/context.providet";
@@ -125,6 +126,7 @@ const Post = ({ post, fetchPost }: TProps) => {
       success: "Flow added 👌",
       error: "Failed to update the post",
     });
+    fetchPost();
   };
   const unFlow = async (followerId: string) => {
     const token = await getToken();
@@ -141,6 +143,7 @@ const Post = ({ post, fetchPost }: TProps) => {
       success: " successfully unFlow  👌",
       error: "Failed to update the post",
     });
+    fetchPost();
   };
 
   const handleFollowClick = () => {
@@ -172,6 +175,7 @@ const Post = ({ post, fetchPost }: TProps) => {
       },
     });
     fetchPost();
+    setCommentInput(false)
     toast.message("commment added ! ");
   };
   const handleCommentDelete = async (commentId: string) => {
@@ -198,6 +202,7 @@ const Post = ({ post, fetchPost }: TProps) => {
       }
     );
     fetchPost();
+    setEditComment(false)
     toast.message("commment undated");
   };
 
@@ -223,6 +228,7 @@ const Post = ({ post, fetchPost }: TProps) => {
           <div className="flex flex-col gap-y-1 justify-start">
             <h2 className="text-sm md:text-lg font-semibold font-serif">
               {post?.user?.name}
+              <small>post details</small>
             </h2>
             {user?.data?.email !== post.user.email && (
               <div>
@@ -329,12 +335,12 @@ const Post = ({ post, fetchPost }: TProps) => {
 
           <div>
             <button
+              className=" flex items-center gap-2"
               onClick={() => {
                 {
                   handleCommentClick(), setEditComment(false);
                 }
               }}
-              className=" flex items-center gap-2"
             >
               <small className=" font-bodyfont">Comment</small>
               <FaRegComment />
@@ -348,14 +354,14 @@ const Post = ({ post, fetchPost }: TProps) => {
         >
           <input
             className="mt-2 border p-2 w-full rounded"
+            placeholder="Type here..."
             type="text"
             value={userComment}
             onChange={(e) => setUserComment(e.target.value)}
-            placeholder="Type here..."
           />
           <IoIosSend
-            onClick={() => handleCommentadd(user?.data?._id as string)}
             className={`absolute w-5 h-5 top-5 right-2.5  ${userComment !== "" && " text-blue-700"} `}
+            onClick={() => handleCommentadd(user?.data?._id as string)}
           />
         </div>
         <div
@@ -365,13 +371,13 @@ const Post = ({ post, fetchPost }: TProps) => {
         >
           <input
             className="mt-2 border p-2 w-full rounded"
-            type="text"
             defaultValue={preComment}
+            type="text"
             onChange={(e) => setEditCommentValue(e.target.value)}
           />
           <IoIosSend
-            onClick={() => handleCommentaEdit()}
             className={`absolute w-5 h-5 top-5 right-2.5  ${editCommentValue !== "" && " text-blue-700"} `}
+            onClick={() => handleCommentaEdit()}
           />
         </div>
       </div>
@@ -401,17 +407,17 @@ const Post = ({ post, fetchPost }: TProps) => {
               {user?.data?.email === comment.userId.email && (
                 <div className="flex gap-2">
                   <CiEdit
+                    className=" text-lg text-blue-500"
                     onClick={() => {
                       handleEdit(),
                         setCommentId(comment._id),
                         setPreComment(comment?.userComment);
                       setCommentInput(false);
                     }}
-                    className=" text-lg text-blue-500"
                   />
                   <MdDelete
-                    onClick={() => handleCommentDelete(comment._id)}
                     className=" text-lg text-red-500"
+                    onClick={() => handleCommentDelete(comment._id)}
                   />
                 </div>
               )}

@@ -1,99 +1,115 @@
-"use client";
+// "use client";
 
-import axios from "axios";
-import { useEffect, useState, useCallback } from "react";
+// import axios from "axios";
+// import { useEffect, useState } from "react";
+// import { FaSearch } from "react-icons/fa";
 
-import Post from "@/src/components/Ul/post/Post";
-import { getToken } from "@/src/components/utils/getToken";
-import { baseAPI } from "@/src/config/envConfig";
-import { IReceivedPost, TPost } from "@/src/types";
-import { useUser } from "@/src/components/context/context.providet";
+// import Post from "@/src/components/Ul/post/Post";
+// import { getToken } from "@/src/components/utils/getToken";
+// import { baseAPI } from "@/src/config/envConfig";
+// import { IReceivedPost, TPost } from "@/src/types";
+// import { useUser } from "@/src/components/context/context.providet";
 
-export default function NewsFeed() {
-  const [data, setData] = useState<TPost | null>(null);
-  const [page, setPage] = useState(1);
-  const [loading, setLoading] = useState(false);
-  const posts = data?.data || [];
-  const { search } = useUser();
-  const fetchPost = useCallback(async () => {
-    setLoading(true);
-    const token = await getToken();
+// export default function NewsFeed() {
+//   const { search } = useUser();
+//   const [data, ] = useState<TPost | null>(null);
+//   const [searchdata, setSearchData] = useState<TPost | null>(null);
 
-    try {
-      const { data } = await axios.get(
-        `${baseAPI}/all-post?sort=-totalVote&page=${page}`,
-        {
-          headers: {
-            Authorization: token as string,
-          },
-        }
-      );
+//   const posts = data?.data || [];
+//   const searchposts = searchdata?.data || [];
 
-      setData((prevData) => ({
-        ...data,
-        data: [...(prevData?.data || []), ...data.data],
-      }));
-    } catch (error) {
-      console.error("Failed to fetch posts", error);
-    } finally {
-      setLoading(false);
-    }
-  }, [page]);
+//   const fetchPost = async () => {
+//     const token = await getToken();
 
-  useEffect(() => {
-    fetchPost();
-  }, []);
+//     try {
+//       const { data } = await axios.get(
+//         `${baseAPI}/all-post?sort=-totalVote&page`,
+//         {
+//           headers: {
+//             Authorization: token as string,
+//           },
+//         }
+//       );
+//     } catch (error) {
+//       console.error("Failed to fetch posts", error);
+//     }
+//   };
 
-  useEffect(() => {
-    const handleScroll = () => {
-      if (
-        window.innerHeight + window.scrollY >= document.body.offsetHeight &&
-        !loading
-      ) {
-        setPage((prevPage) => prevPage + 1);
-      }
-    };
+//   const searchData = async (searchField: string) => {
+//     const token = await getToken();
 
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, [loading]);
+//     if (
+//       searchField === "Exploration" ||
+//       searchField === "Business Travel" ||
+//       searchField === "Adventure"
+//     ) {
+//       const { data } = await axios.get(
+//         `${baseAPI}/all-post?sort=-totalVote&category=${searchField}`,
+//         {
+//           headers: {
+//             Authorization: token as string,
+//           },
+//         }
+//       );
 
-  return (
-    <main className="flex flex-col  gap-y-2 relative">
-      <div
-        className={`transition-all duration-300 flex items-center gap-2 ${
-          search
-            ? "sticky  top-16 bg-default-100 rounded-lg z-10 p-4 shadow-md opacity-100"
-            : "opacity-0 pointer-events-none"
-        }`}
-      >
-       
-        <input
-          type="text"
-          placeholder="Search..."
-          className="w-full border rounded-md p-2 transition duration-500 ease-in-out"
-        />
-         <select className=" outline-none text-sm h-10 rounded-md px-2">
-          <option selected value="">
-            Found US
-          </option>
-          <option value="Exploration">Exploration</option>
-          <option value="Business Travel">Business Travel</option>
-          <option value="Adventure"> Adventure</option>{" "}
-        </select>
-      </div>
-      <div className="flex flex-col ">
-        {posts.length ? (
-          posts.map((post: IReceivedPost, index: number) => (
-            <Post key={index} fetchPost={fetchPost} post={post} />
-          ))
-        ) : (
-          <div className="flex min-h-screen w-full items-center justify-center rounded-md bg-default-100">
-            <h1 className="text-4xl">There is no post here!</h1>
-          </div>
-        )}
-   
-      </div>
-    </main>
-  );
-}
+//       setSearchData(data);
+//     } else {
+//       const { data } = await axios.get(
+//         `${baseAPI}/all-post?sort=-totalVote&searchTerm=${searchField}`,
+//         {
+//           headers: {
+//             Authorization: token as string,
+//           },
+//         }
+//       );
+
+//       setSearchData(data);
+//     }
+//   };
+
+//   useEffect(() => {
+//     fetchPost();
+//   }, []);
+
+//   return (
+//     <main className="flex flex-col gap-y-2 relative">
+//       <div
+//         className={`transition-all duration-300 flex items-center gap-2 ${
+//           search
+//             ? "sticky top-16 bg-default-100 rounded-lg z-10 p-4 shadow-md opacity-100"
+//             : "opacity-0 pointer-events-none"
+//         }`}
+//       >
+//         <div className="relative w-full">
+//           <FaSearch className="absolute right-4 text-lg h-full" />
+//           <input
+//             className="w-full border rounded-md p-2 transition duration-500 ease-in-out"
+//             placeholder="Search..."
+//             type="text"
+//             onChange={(e) => searchData(e.target.value)}
+//           />
+//         </div>
+//         <select
+//           className="outline-none text-sm h-10 rounded-md px-2"
+//           onChange={(e) => searchData(e.target.value)}
+//         >
+//           <option disabled selected value="">
+//             Found US
+//           </option>
+//           <option value="Exploration">Exploration</option>
+//           <option value="Business Travel">Business Travel</option>
+//           <option value="Adventure">Adventure</option>
+//         </select>
+//       </div>
+//       <div className="flex flex-col gap-4">
+//         {searchposts.length
+//           ? searchposts.map((post: IReceivedPost, index: number) => (
+//               <Post key={index} fetchPost={fetchPost} post={post} />
+//             ))
+//           : posts.map((post: IReceivedPost, index: number) => (
+//               <Post key={index} fetchPost={fetchPost} post={post} />
+//             ))}
+//       </div>
+//     </main>
+//   );
+// }

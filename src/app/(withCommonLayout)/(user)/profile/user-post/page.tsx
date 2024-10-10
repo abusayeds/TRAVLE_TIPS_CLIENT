@@ -23,6 +23,8 @@ export default function NewsFeed() {
       });
 
       setData(data);
+      console.log(data);
+      
     } catch (error) {
       console.error("Failed to fetch votes", error);
     }

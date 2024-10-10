@@ -11,13 +11,11 @@ import axios from "axios";
 
 import { IUser } from "../../types";
 import { baseAPI } from "../../config/envConfig";
-
 import { getToken } from "../utils/getToken";
 import { verifyToken } from "../utils/VerifyToken";
 
 interface IUserProviderValues {
   user: IUser | null;
-
   isLoading: boolean;
   setUser: (user: IUser | null) => void;
   setIsLoading: Dispatch<SetStateAction<boolean>>;
@@ -25,14 +23,12 @@ interface IUserProviderValues {
   search: boolean;
   setSearch: Dispatch<SetStateAction<boolean>>;
 }
+
 const UserContext = createContext<IUserProviderValues | null>(null);
 
 const UserProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<IUser | null>(null);
-
   const [search, setSearch] = useState(false);
-
-  
   const [isLoading, setIsLoading] = useState(true);
 
   const reFactehUser = async () => {
@@ -51,17 +47,28 @@ const UserProvider = ({ children }: { children: ReactNode }) => {
 
       setUser(data);
     } catch (error) {
-      console.error("Failed to fetch votes", error);
+      console.error("Failed to fetch user", error);
     }
   };
 
+  // useEffect to call reFactehUser when isLoading changes
   useEffect(() => {
-    reFactehUser();
-  }, []);
- 
+    if (isLoading) {
+      reFactehUser().then(() => setIsLoading(false)); // Optionally, set loading to false after the fetch
+    }
+  }, [isLoading, user]); // reFactehUser will be called whenever isLoading changes
+
   return (
     <UserContext.Provider
-      value={{ reFactehUser, user, setUser, isLoading, setIsLoading, search , setSearch}}
+      value={{
+        reFactehUser,
+        user,
+        setUser,
+        isLoading,
+        setIsLoading,
+        search,
+        setSearch,
+      }}
     >
       {children}
     </UserContext.Provider>

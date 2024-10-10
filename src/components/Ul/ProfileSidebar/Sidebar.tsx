@@ -8,6 +8,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { TbPremiumRights } from "react-icons/tb";
 import { RiVerifiedBadgeFill } from "react-icons/ri";
+
 import Loading from "../../loading";
 import { logout } from "../../services/authServices";
 import { useUser } from "../../context/context.providet";
@@ -31,6 +32,7 @@ const Sideber = () => {
       const total = data.data.reduce((acc: any, item: any) => {
         return acc + (item.totalVote || 0);
       }, 0);
+
       setSubTotalVote(total);
     }
     reFactehUser();
@@ -62,7 +64,7 @@ const Sideber = () => {
     try {
       const res = await axios.post(
         `https://api.imgbb.com/1/upload?key=${CLIENT_API_KEY}`,
-        formData
+        formData,
       );
 
       if (res.data.success) {
@@ -73,7 +75,8 @@ const Sideber = () => {
           id: user?.data?._id,
           imgURL,
         };
-
+        console.log(userData);
+        
         updateUser(userData);
         reFactehUser();
         setImgUploadloding(false);
@@ -90,7 +93,7 @@ const Sideber = () => {
     try {
       const res = await axios.post(
         `https://api.imgbb.com/1/upload?key=${CLIENT_API_KEY}`,
-        formData
+        formData,
       );
 
       if (res.data.success) {
@@ -211,8 +214,8 @@ const Sideber = () => {
                   <div>
                     {subTotalVote > 0 && (
                       <button
-                        onClick={() => handlePayment(user?.data?._id)}
                         className=" flex items-center w-24 gap-1 rounded bg-black text-white text-xs px-2 py-[0.5]"
+                        onClick={() => handlePayment(user?.data?._id)}
                       >
                         Premium <TbPremiumRights />{" "}
                       </button>

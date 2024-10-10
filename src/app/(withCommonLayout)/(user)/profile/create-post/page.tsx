@@ -8,7 +8,6 @@ import Loading from "@/src/components/loading";
 import { CLIENT_API_KEY } from "@/src/config/envConfig";
 import { useAddPost } from "@/src/components/hooks/post.hook";
 const PostCreationModal = ({ isVisible, onClose }: any) => {
-  
   const router = useRouter();
   const [ImgUploadLoading, setImgUploadloding] = useState(false);
   const [content, setContent] = useState("");

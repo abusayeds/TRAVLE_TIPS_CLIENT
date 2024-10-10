@@ -65,7 +65,7 @@ export const Navbar = () => {
             <button onClick={() => setSearch(!search)}>Search</button>
           )}
           <ThemeSwitch />
-          {user ? (
+          {user?.data?.email ? (
             <Link href="/profile">Profile</Link>
           ) : (
             <Link href="/login">Login</Link>
@@ -78,7 +78,7 @@ export const Navbar = () => {
           <button onClick={() => setSearch(!search)}>Search</button>
         )}
 
-        {user ? (
+        {user?.data?.email ? (
           <Link href="/profile">Profile</Link>
         ) : (
           <Link href="/login">Login </Link>

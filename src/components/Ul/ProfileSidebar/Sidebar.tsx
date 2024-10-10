@@ -12,8 +12,8 @@ import { RiVerifiedBadgeFill } from "react-icons/ri";
 import Loading from "../../loading";
 import { logout } from "../../services/authServices";
 import { useUser } from "../../context/context.providet";
-import { useUpdateUser } from "../../hooks/user.hook";
 import { useMyPost } from "../../hooks/post.hook";
+import { getToken } from "../../utils/getToken";
 
 import { SidebarOptions } from "./SideberOptions";
 import { adminLinks, userLinks } from "./constant";
@@ -27,23 +27,10 @@ const Sideber = () => {
   const { data } = useMyPost();
   const [subTotalVote, setSubTotalVote] = useState(0);
 
-  useEffect(() => {
-    if (data?.data && Array.isArray(data.data)) {
-      const total = data.data.reduce((acc: any, item: any) => {
-        return acc + (item.totalVote || 0);
-      }, 0);
-
-      setSubTotalVote(total);
-    }
-    reFactehUser();
-  }, [data]);
-
   const router = useRouter();
   const [ImgUploadLoading, setImgUploadloding] = useState(false);
   const pathName = usePathname();
   const [isModalVisible, setIsModalVisible] = useState(false);
-
-  const { mutate: updateUser } = useUpdateUser();
 
   const handleLogOut = () => {
     logout();
@@ -59,6 +46,7 @@ const Sideber = () => {
   const uploadProfileImage = async (e: any) => {
     setImgUploadloding(true);
     const formData = new FormData();
+    const token = await getToken();
 
     formData.append("image", e);
     try {
@@ -67,19 +55,25 @@ const Sideber = () => {
         formData,
       );
 
-      if (res.data.success) {
+      if (res?.data?.success) {
         const imgURL = {
-          profilePhoto: res.data.data.url,
+          profilePhoto: res?.data?.data?.url,
         };
-        const userData = {
-          id: user?.data?._id,
+
+        const response = await axios.put(
+          `${baseAPI}/update-user/${user?.data?._id}`,
           imgURL,
-        };
-        console.log(userData);
-        
-        updateUser(userData);
-        reFactehUser();
-        setImgUploadloding(false);
+          {
+            headers: {
+              Authorization: token as string,
+            },
+          },
+        );
+
+        if (response?.data?.success) {
+          setImgUploadloding(false);
+          reFactehUser();
+        }
       }
     } catch (err) {
       setImgUploadloding(false);
@@ -88,6 +82,7 @@ const Sideber = () => {
   const uploadCoverImage = async (e: any) => {
     setImgUploadloding(true);
     const formData = new FormData();
+    const token = await getToken();
 
     formData.append("image", e);
     try {
@@ -96,18 +91,25 @@ const Sideber = () => {
         formData,
       );
 
-      if (res.data.success) {
+      if (res?.data?.success) {
         const imgURL = {
-          coverPhoto: res.data.data.url,
-        };
-        const userData = {
-          id: user?.data?._id,
-          imgURL,
+          coverPhoto: res?.data?.data?.url,
         };
 
-        updateUser(userData);
-        reFactehUser();
-        setImgUploadloding(false);
+        const response = await axios.put(
+          `${baseAPI}/update-user/${user?.data?._id}`,
+          imgURL,
+          {
+            headers: {
+              Authorization: token as string,
+            },
+          },
+        );
+
+        if (response?.data?.success) {
+          setImgUploadloding(false);
+          reFactehUser();
+        }
       }
     } catch (err) {
       setImgUploadloding(false);
@@ -133,6 +135,21 @@ const Sideber = () => {
       window.location.href = data?.data?.payment_url;
     }
   };
+
+  useEffect(() => {
+    if (data?.data && Array.isArray(data.data)) {
+      const total = data.data.reduce((acc: any, item: any) => {
+        return acc + (item.totalVote || 0);
+      }, 0);
+
+      setSubTotalVote(total);
+    }
+    reFactehUser();
+  }, [data]);
+
+  useEffect(() => {
+    reFactehUser();
+  }, []);
 
   return (
     <div>

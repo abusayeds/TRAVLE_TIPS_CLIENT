@@ -9,6 +9,7 @@ import { IoIosSend } from "react-icons/io";
 import { CiEdit } from "react-icons/ci";
 import { MdDelete } from "react-icons/md";
 import { FaRegComment } from "react-icons/fa";
+import Link from "next/link";
 
 import { getToken } from "../../utils/getToken";
 import { delay } from "../../utils/delay";
@@ -21,11 +22,12 @@ import { IReceivedPost } from "@/src/types";
 import { baseAPI } from "@/src/config/envConfig";
 
 type TProps = {
+  singlePostDetials?: boolean;
   post: IReceivedPost;
   fetchPost: () => Promise<void>;
 };
 
-const Post = ({ post, fetchPost }: TProps) => {
+const Post = ({ singlePostDetials = false, post, fetchPost }: TProps) => {
   const { user } = useUser();
   const [commentInput, setCommentInput] = useState(false);
   const [editComment, setEditComment] = useState(false);
@@ -47,7 +49,7 @@ const Post = ({ post, fetchPost }: TProps) => {
   const [isEditModalVisible, setIsEditModalVisible] = useState(false);
   const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
   const [hasVoted, setHasVoted] = useState<"upvoted" | "downvoted" | null>(
-    null
+    null,
   );
   const [totalVotes, setTotalVotes] = useState(post.totalVote);
 
@@ -57,7 +59,9 @@ const Post = ({ post, fetchPost }: TProps) => {
     if (storedVote) {
       setHasVoted(storedVote as "upvoted" | "downvoted");
     }
-  }, [post._id]);
+
+    setTotalVotes(post.totalVote);
+  }, [post._id, post]);
   const handleUpvote = async (id: string) => {
     if (hasVoted === "upvoted") return;
     try {
@@ -175,7 +179,7 @@ const Post = ({ post, fetchPost }: TProps) => {
       },
     });
     fetchPost();
-    setCommentInput(false)
+    setCommentInput(false);
     toast.message("commment added ! ");
   };
   const handleCommentDelete = async (commentId: string) => {
@@ -199,10 +203,10 @@ const Post = ({ post, fetchPost }: TProps) => {
         headers: {
           Authorization: token as string,
         },
-      }
+      },
     );
     fetchPost();
-    setEditComment(false)
+    setEditComment(false);
     toast.message("commment undated");
   };
 
@@ -215,7 +219,7 @@ const Post = ({ post, fetchPost }: TProps) => {
       />
       <DeletePost
         isVisible={isDeleteModalVisible}
-        postId={post._id}
+        postId={post?._id}
         onClose={closeDeleteModal}
       />
       <div className="flex justify-between">
@@ -225,35 +229,42 @@ const Post = ({ post, fetchPost }: TProps) => {
             className="h-10 w-10 md:w-12 md:h-12 rounded-full mr-3"
             src={post?.user?.profilePhoto}
           />
-          <div className="flex flex-col gap-y-1 justify-start">
-            <h2 className="text-sm md:text-lg font-semibold font-serif">
-              {post?.user?.name}
-              <small>post details</small>
-            </h2>
-            {user?.data?.email !== post.user.email && (
-              <div>
-                {isFollowing ? (
-                  <button
-                    className="flex items-center justify-center gap-1 border text-xs font-semibold border-gray-300 transition duration-300 ease-in-out w-20 px-3 py-1 rounded-md shadow-sm"
-                    onClick={handleUnfollowClick}
-                  >
-                    Unfollow
-                  </button>
-                ) : (
-                  <button
-                    className="flex items-center justify-center gap-1 border text-xs font-semibold border-gray-300 transition duration-300 ease-in-out w-20 px-3 py-1 rounded-md shadow-sm"
-                    onClick={handleFollowClick}
-                  >
-                    <FaUserPlus />
-                    Follow
-                  </button>
-                )}
-              </div>
-            )}
+          <div className="flex flex-col gap-y-1 justify-start items-start">
+            <div className=" flex items-center gap-5 ">
+              <h2 className="text-sm md:text-lg font-semibold font-serif">
+                {post?.user?.name}
+              </h2>
+              {user?.data?.email !== post?.user?.email && (
+                <div>
+                  {isFollowing ? (
+                    <button
+                      className="flex items-center justify-center gap-1 border text-xs font-semibold border-gray-300 transition duration-300 ease-in-out w-20 px-3 py-1 rounded-md shadow-sm"
+                      onClick={handleUnfollowClick}
+                    >
+                      Unfollow
+                    </button>
+                  ) : (
+                    <button
+                      className="flex items-center justify-center gap-1 border text-xs font-semibold border-gray-300 transition duration-300 ease-in-out w-20 px-3 py-1 rounded-md shadow-sm"
+                      onClick={handleFollowClick}
+                    >
+                      <FaUserPlus />
+                      Follow
+                    </button>
+                  )}
+                </div>
+              )}
+            </div>
+            <Link
+              className="text-xs text-start text-blue-800 underline "
+              href={`/newsFeed/${post?._id}`}
+            >
+              {singlePostDetials ? "" : "Details"}
+            </Link>
           </div>
         </div>
 
-        {user?.data?.email === post.user.email && (
+        {user?.data?.email === post?.user?.email && (
           <div className="flex gap-2 md:gap-4">
             <button
               className="mt-[0.5] underline text-blue-600"
@@ -277,7 +288,7 @@ const Post = ({ post, fetchPost }: TProps) => {
 
       <div className="flex flex-col gap-2">
         <div className="w-full grid grid-cols-2 gap-4">
-          {post?.images.length % 2 === 1 && (
+          {post?.images?.length % 2 === 1 && (
             <div className="col-span-2">
               <img
                 alt="Profile"
@@ -287,7 +298,7 @@ const Post = ({ post, fetchPost }: TProps) => {
             </div>
           )}
           {post?.images
-            .slice(post?.images.length % 2 === 1 ? 1 : 0)
+            ?.slice(post?.images?.length % 2 === 1 ? 1 : 0)
             .map((img, index) => (
               <img
                 key={index}
@@ -309,7 +320,7 @@ const Post = ({ post, fetchPost }: TProps) => {
                 className={`p-1 border flex gap-1 rounded-full justify-items-center ${
                   hasVoted === "upvoted" ? "bg-blue-600 text-white" : ""
                 }`}
-                onClick={() => handleUpvote(post._id)}
+                onClick={() => handleUpvote(post?._id)}
               >
                 <BiLike className="text-xl" />
               </button>
@@ -328,8 +339,8 @@ const Post = ({ post, fetchPost }: TProps) => {
               )}
             </div>
             <span className="text-1xl font-extrabold">
-              {totalVotes}{" "}
-              <small className="text-xs font-titlefont">likes</small>
+              {totalVotes}
+              <small className="text-xs font-titlefont"> likes </small>
             </span>
           </div>
 
@@ -386,7 +397,7 @@ const Post = ({ post, fetchPost }: TProps) => {
         <div className=" flex  flex-col gap-3 w-full justify-between   text-xs">
           {post?.comments?.map((comment: any) => (
             <div
-              key={comment._id}
+              key={comment?._id}
               className="p-3 flex gap-8 w-full h-auto border  rounded-md items-center"
             >
               <div className="  md:flex gap-2 items-center">
@@ -404,20 +415,20 @@ const Post = ({ post, fetchPost }: TProps) => {
                 <p>{comment?.userComment}</p>
               </div>
 
-              {user?.data?.email === comment.userId.email && (
+              {user?.data?.email === comment?.userId?.email && (
                 <div className="flex gap-2">
                   <CiEdit
                     className=" text-lg text-blue-500"
                     onClick={() => {
                       handleEdit(),
-                        setCommentId(comment._id),
+                        setCommentId(comment?._id),
                         setPreComment(comment?.userComment);
                       setCommentInput(false);
                     }}
                   />
                   <MdDelete
                     className=" text-lg text-red-500"
-                    onClick={() => handleCommentDelete(comment._id)}
+                    onClick={() => handleCommentDelete(comment?._id)}
                   />
                 </div>
               )}

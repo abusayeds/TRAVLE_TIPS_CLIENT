@@ -1,22 +1,26 @@
 "use client";
-
 import axios from "axios";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 
-import Post from "@/src/components/Ul/post/Post";
 import { getToken } from "@/src/components/utils/getToken";
 import { baseAPI } from "@/src/config/envConfig";
-import { IReceivedPost, TPost } from "@/src/types";
-
-export default function NewsFeed() {
+import { TPost } from "@/src/types";
+import Post from "@/src/components/Ul/post/Post";
+interface IProps {
+  params: {
+    postId: string;
+  };
+}
+const Detailpage = ({ params: { postId } }: IProps) => {
   const [data, setData] = useState<TPost | null>(null);
+
   const posts = data?.data || [];
 
   const fetchPost = async () => {
     const token = await getToken();
 
     try {
-      const { data } = await axios.get(`${baseAPI}/my-post?sort=-totalVote`, {
+      const { data } = await axios.get(`${baseAPI}/single-post/${postId}`, {
         headers: {
           Authorization: token as string,
         },
@@ -24,20 +28,20 @@ export default function NewsFeed() {
 
       setData(data);
     } catch (error) {
-      console.error("Failed to fetch votes", error);
+      console.error("Failed to fetch posts", error);
     }
   };
+
+  console.log(posts.upvote);
 
   useEffect(() => {
     fetchPost();
   }, []);
 
   return (
-    <div className=" flex flex-col gap-y-6  ">
-      {posts.length ? (
-        posts.map((post: IReceivedPost, index: number) => (
-          <Post key={index} fetchPost={fetchPost} post={post} />
-        ))
+    <div className=" flex flex-col gap-y-6  w-1/2 mx-auto ">
+      {posts ? (
+        <Post fetchPost={fetchPost} post={posts} singlePostDetials={true} />
       ) : (
         <div className="flex min-h-screen w-full items-center justify-center rounded-md bg-default-100">
           <h1 className="text-4xl">There is no post hear !</h1>
@@ -45,4 +49,6 @@ export default function NewsFeed() {
       )}
     </div>
   );
-}
+};
+
+export default Detailpage;

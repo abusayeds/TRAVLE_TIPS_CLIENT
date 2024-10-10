@@ -126,7 +126,7 @@ const EditPost = ({ isVisible, onClose, post }: any) => {
         />
 
         <div className="mt-5 grid  md:grid-cols-3 gap-2">
-          {image.map((img, index) => (
+          {image?.map((img, index) => (
             <img
               key={index}
               alt=""

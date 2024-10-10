@@ -6,7 +6,7 @@ export const siteConfig = {
   navItems: [
     {
       label: "News Feed",
-      href: "/newsfeeds",
+      href: "/newsFeed",
     },
 
     {
@@ -21,7 +21,7 @@ export const siteConfig = {
   navMenuItems: [
     {
       label: "News Feed",
-      href: "/newsfeeds",
+      href: "/newsFeed",
     },
 
     {

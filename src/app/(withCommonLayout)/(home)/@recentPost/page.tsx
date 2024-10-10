@@ -1,12 +1,9 @@
-import React from "react";
-import NewsFeeds from "../../newsfeeds/page";
-
-
+import NewsFeed from "../../newsFeed/page";
 
 const page = () => {
   return (
     <div>
-     <NewsFeeds></NewsFeeds>
+      <NewsFeed />
     </div>
   );
 };

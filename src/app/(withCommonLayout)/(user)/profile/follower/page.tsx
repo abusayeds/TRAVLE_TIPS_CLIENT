@@ -10,7 +10,7 @@ const Follower = () => {
   return (
     <div className="bg-white  rounded-md w-full">
       <p className=" text-center text-4xl text-blue-500 font-serif  my-4">
-        Your Follower is hear  !{" "}
+        Your Follower is hear !{" "}
       </p>
       <div className="overflow-x-auto">
         <div className="inline-block min-w-full shadow-md rounded-lg overflow-hidden">

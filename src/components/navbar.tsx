@@ -44,7 +44,7 @@ export const Navbar = () => {
               <NextLink
                 className={clsx(
                   linkStyles({ color: "foreground" }),
-                  "data-[active=true]:text-primary data-[active=true]:font-medium"
+                  "data-[active=true]:text-primary data-[active=true]:font-medium",
                 )}
                 color="foreground"
                 href={item.href}
@@ -61,7 +61,9 @@ export const Navbar = () => {
         justify="end"
       >
         <NavbarItem className="hidden sm:flex md:gap-5">
-        {user?.data?.email  && <button onClick={() => setSearch(!search)}>Search</button>}
+          {user?.data?.email && (
+            <button onClick={() => setSearch(!search)}>Search</button>
+          )}
           <ThemeSwitch />
           {user?.data?.email ? (
             <Link href="/profile">Profile</Link>
@@ -72,7 +74,9 @@ export const Navbar = () => {
       </NavbarContent>
 
       <NavbarContent className="sm:hidden basis-1 pl-2" justify="end">
-        {user?.data?.email  && <button onClick={() => setSearch(!search)}>Search</button>}
+        {user?.data?.email && (
+          <button onClick={() => setSearch(!search)}>Search</button>
+        )}
 
         {user?.data?.email ? (
           <Link href="/profile">Profile</Link>

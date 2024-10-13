@@ -27,7 +27,7 @@ const Landing = () => {
           backgroundImage: `url(${images[currentImage]})`,
         }}
       >
-        <p className="font-serif text-6xl">
+        <p className="  font-serif text-6xl">
           Let,s Enjoy Your Travel <br /> Tips and TripGoal
         </p>
 

@@ -34,7 +34,6 @@ export default function NewsFeed() {
         },
       );
 
-      // Append new data to existing posts
       setData(
         (prevData) =>
           ({
@@ -87,16 +86,22 @@ export default function NewsFeed() {
       if (observerRef.current) {
         const { bottom } = observerRef.current.getBoundingClientRect();
 
-        if (bottom <= window.innerHeight && !isLoading) {
-          setPage((prevPage) => prevPage + 1);
+        if (typeof window !== undefined) {
+          if (bottom <= window.innerHeight && !isLoading) {
+            setPage((prevPage) => prevPage + 1);
+          }
         }
       }
     };
 
-    window.addEventListener("scroll", handleScroll);
+    if (typeof window !== undefined) {
+      window.addEventListener("scroll", handleScroll);
+    }
 
     return () => {
-      window.removeEventListener("scroll", handleScroll);
+      if (typeof window !== undefined) {
+        window.removeEventListener("scroll", handleScroll);
+      }
     };
   }, [isLoading]);
 

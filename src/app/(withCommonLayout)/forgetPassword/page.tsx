@@ -20,7 +20,6 @@ const ForgetPasswordModel = () => {
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [passwordsMatch, setPasswordsMatch] = useState(true);
-  const [setConfirmPasswordTouched] = useState(false);
 
   const handleForgetPassword = async (e: React.FormEvent) => {
     e.preventDefault(); // Prevent page reload
@@ -33,7 +32,7 @@ const ForgetPasswordModel = () => {
       };
       const { data: link } = await axios.post(
         `${baseAPI}/forget-password`,
-        userId
+        userId,
       );
 
       if (link.success) {
@@ -54,7 +53,6 @@ const ForgetPasswordModel = () => {
     setConfirmPassword(e.target.value);
   };
   const handleConfirmPasswordBlur = () => {
-    setConfirmPasswordTouched(true);
     if (confirmPassword !== newPassword) {
       setPasswordsMatch(false);
     } else {

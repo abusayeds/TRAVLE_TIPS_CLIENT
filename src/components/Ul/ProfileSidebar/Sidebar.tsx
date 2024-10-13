@@ -135,7 +135,9 @@ const Sideber = () => {
     const data = await res.json();
 
     if (data?.success) {
-      window.location.href = data?.data?.payment_url;
+      if (typeof window !== undefined) {
+        window.location.href = data?.data?.payment_url;
+      }
     }
   };
 

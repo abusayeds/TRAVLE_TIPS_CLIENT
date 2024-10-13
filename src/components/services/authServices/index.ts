@@ -23,6 +23,7 @@ export const loginUser = async (userData: FieldValues) => {
 
     if (data.success) {
       cookies().set("accessToken", data?.token);
+      console.log(data);
     }
 
     if (data?.data?.success) {

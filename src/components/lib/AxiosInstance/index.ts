@@ -2,13 +2,11 @@
 import axios from "axios";
 import { cookies } from "next/headers";
 
-import { baseAPI } from "@/src/config/envConfig";
+// import { baseAPI } from "@/src/config/envConfig";
 
 const axiosInastances = axios.create({
-  baseURL: baseAPI,
+  baseURL: "https://travel-tips-server-three.vercel.app/api/v1",
 });
-
-export default axiosInastances;
 
 axiosInastances.interceptors.request.use(
   function (config) {
@@ -23,7 +21,7 @@ axiosInastances.interceptors.request.use(
   },
   function (error) {
     return Promise.reject(error);
-  },
+  }
 );
 
 axiosInastances.interceptors.response.use(
@@ -32,5 +30,6 @@ axiosInastances.interceptors.response.use(
   },
   function (error) {
     return Promise.reject(error);
-  },
+  }
 );
+export default axiosInastances;

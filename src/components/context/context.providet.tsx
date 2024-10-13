@@ -36,6 +36,8 @@ const UserProvider = ({ children }: { children: ReactNode }) => {
 
   const reFactehUser = async () => {
     const token = await getToken();
+    console.log(token);
+
     let res = null;
 
     if (token) {

@@ -31,16 +31,16 @@ export const Navbar = () => {
         </NavbarBrand>
         <ul className="hidden lg:flex gap-4 mt-2  justify-center items-center ml-2">
           {user?.data?.role === "USER" && (
-            <Link className="text-black font-titlefont" href="/newsFeed">
+            <Link className=" font-titlefont" href="/newsFeed">
               News Feed
             </Link>
           )}
 
-          <Link className="text-black font-titlefont" href="/about">
-            About
-          </Link>
-          <Link className="text-black font-titlefont" href="/contact">
+          <Link className=" font-titlefont" href="/contact">
             Contact
+          </Link>
+          <Link className=" font-titlefont" href="/about">
+            About
           </Link>
         </ul>
       </NavbarContent>
@@ -85,15 +85,14 @@ export const Navbar = () => {
       <NavbarMenu>
         <div className="mx-4 mt-2 flex flex-col gap-2">
           {user?.data?.role === "USER" && (
-            <Link className="text-black font-titlefont" href="/newsFeed">
+            <Link className=" font-titlefont" href="/newsFeed">
               News Feed
             </Link>
           )}
-
-          <Link className="text-black font-titlefont" href="/about">
+          <Link className=" font-titlefont" href="/about">
             About
           </Link>
-          <Link className="text-black font-titlefont" href="/contact">
+          <Link className="t font-titlefont" href="/contact">
             Contact
           </Link>
         </div>

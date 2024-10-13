@@ -70,7 +70,7 @@ const Follower = () => {
                 ))
               ) : (
                 <tr>
-                  <td className="text-center py-5" colSpan="4">
+                  <td className="text-center py-5" colSpan={4}>
                     <p className="text-4xl text-red-600">
                       😞 There are no following here !
                     </p>

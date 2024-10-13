@@ -13,20 +13,12 @@ module.exports = {
         bodyfont: ["Poppins", "sans-serif"],
         titlefont: ["Montserrat", "sans-serif"],
       },
-      animation: {
-        pulse: "pulse 1s ease-in-out infinite",
-      },
+
       colors: {
         bodyColor: "#212428",
         lightText: "#c4cfde",
         boxBg: "linear-gradient(145deg, #1e2024, #23272b)",
         designColor: "#ff014f",
-      },
-      keyframes: {
-        pulse: {
-          "0%, 100%": { transform: "scale(1)" },
-          "50%": { transform: "scale(1.05)" },
-        },
       },
     },
   },

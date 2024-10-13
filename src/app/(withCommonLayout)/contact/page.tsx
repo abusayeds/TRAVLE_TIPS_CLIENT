@@ -99,7 +99,7 @@ const Contact = () => {
               className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring focus:ring-blue-200"
               id="message"
               name="message"
-              rows="5"
+              rows={5}
               value={formData.message}
               onChange={handleChange}
             />

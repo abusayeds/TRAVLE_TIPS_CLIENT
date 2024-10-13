@@ -7,7 +7,7 @@ import { loginUser, registerUser } from "../services/authServices";
 export const useUserRegistration = () => {
   const promise = () =>
     new Promise((resolve) =>
-      setTimeout(() => resolve({ name: "Sonner" }), 2000)
+      setTimeout(() => resolve({ name: "Sonner" }), 2000),
     );
 
   return useMutation<any, Error, FieldValues>({
@@ -31,7 +31,7 @@ export const useUserRegistration = () => {
 export const useUserLogin = () => {
   const promise = () =>
     new Promise((resolve) =>
-      setTimeout(() => resolve({ name: "Sonner" }), 2000)
+      setTimeout(() => resolve({ name: "Sonner" }), 2000),
     );
 
   return useMutation<any, Error, FieldValues>({

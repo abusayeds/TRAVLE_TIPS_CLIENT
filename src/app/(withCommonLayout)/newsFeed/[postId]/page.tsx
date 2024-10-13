@@ -16,8 +16,6 @@ const Detailpage = ({ params: { postId } }: IProps) => {
 
   const posts = data?.data || [];
 
-  console.log({ posts });
-
   const fetchPost = async () => {
     const token = await getToken();
 

@@ -6,7 +6,9 @@ export const delay = async (
     setTimeout(() => {
       resolve();
       if (hardReload) {
-        window.location.reload(); // Hard reload the page without any arguments
+        if (typeof window !== undefined) {
+          window.location.reload();
+        }
       }
     }, ms);
   });

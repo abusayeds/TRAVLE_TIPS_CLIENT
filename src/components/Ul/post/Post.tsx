@@ -42,6 +42,8 @@ const Post = ({ singlePostDetials = false, post, fetchPost }: TProps) => {
     return savedStatus ? JSON.parse(savedStatus) : false;
   });
 
+  console.log({ post });
+
   useEffect(() => {
     localStorage.setItem(localStorageKey, JSON.stringify(isFollowing));
   }, [isFollowing, localStorageKey]);
@@ -399,45 +401,51 @@ const Post = ({ singlePostDetials = false, post, fetchPost }: TProps) => {
 
       <div>
         <div className=" flex  flex-col gap-3 w-full justify-between   text-xs">
-          {post?.comments?.map((comment: any) => (
-            <div
-              key={comment?._id}
-              className="p-3 flex gap-8 w-full h-auto border  rounded-md items-center"
-            >
-              <div className="  md:flex gap-2 items-center">
-                <img
-                  alt="Profile"
-                  className="h-10 w-10 
-                  rounded-full mr-3"
-                  src={comment?.userId?.profilePhoto}
-                />
-                <h3 className="font-bold text-xs md:my-0 mt-2  ">
-                  {comment?.userId?.name}
-                </h3>
-              </div>
-              <div className=" flex flex-col gap-2 justify-start items-start w-4/5 bg-default-100 p-2 max-h-40 overflow-y-auto">
-                <p>{comment?.userComment}</p>
-              </div>
+          {post?.comments?.map((comment: any) => {
+            console.log({ comment });
 
-              {user?.data?.email === comment?.userId?.email && (
-                <div className="flex gap-2">
-                  <CiEdit
-                    className=" text-lg text-blue-500"
-                    onClick={() => {
-                      handleEdit(),
-                        setCommentId(comment?._id),
-                        setPreComment(comment?.userComment);
-                      setCommentInput(false);
-                    }}
+            return (
+              <div
+                key={comment?._id}
+                className="p-3 flex gap-8 w-full h-auto border  rounded-md items-center"
+              >
+                <div className="  md:flex gap-2 items-center">
+                  <img
+                    alt="Profile"
+                    className="h-10 w-10 
+                      rounded-full mr-3"
+                    src={
+                      comment && comment.userId && comment.userId.profilePhoto
+                    }
                   />
-                  <MdDelete
-                    className=" text-lg text-red-500"
-                    onClick={() => handleCommentDelete(comment?._id)}
-                  />
+                  <h3 className="font-bold text-xs md:my-0 mt-2  ">
+                    {comment?.userId?.name}
+                  </h3>
                 </div>
-              )}
-            </div>
-          ))}
+                <div className=" flex flex-col gap-2 justify-start items-start w-4/5 bg-default-100 p-2 max-h-40 overflow-y-auto">
+                  <p>{comment?.userComment}</p>
+                </div>
+
+                {user?.data?.email === comment?.userId?.email && (
+                  <div className="flex gap-2">
+                    <CiEdit
+                      className=" text-lg text-blue-500"
+                      onClick={() => {
+                        handleEdit(),
+                          setCommentId(comment?._id),
+                          setPreComment(comment?.userComment);
+                        setCommentInput(false);
+                      }}
+                    />
+                    <MdDelete
+                      className=" text-lg text-red-500"
+                      onClick={() => handleCommentDelete(comment?._id)}
+                    />
+                  </div>
+                )}
+              </div>
+            );
+          })}
         </div>
       </div>
     </div>

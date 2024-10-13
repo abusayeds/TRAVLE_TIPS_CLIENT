@@ -3,7 +3,7 @@
 import axios from "axios";
 import { useEffect, useState, useRef } from "react";
 import { FaSearch } from "react-icons/fa";
-import Link from "next/link";
+
 import Post from "@/src/components/Ul/post/Post";
 import { getToken } from "@/src/components/utils/getToken";
 import { baseAPI } from "@/src/config/envConfig";
@@ -31,7 +31,7 @@ export default function NewsFeed() {
           headers: {
             Authorization: token as string,
           },
-        }
+        },
       );
 
       // Append new data to existing posts
@@ -40,7 +40,7 @@ export default function NewsFeed() {
           ({
             ...prevData,
             data: prevData ? [...prevData.data, ...data.data] : data.data,
-          }) as any
+          }) as any,
       );
     } catch (error) {
       console.error("Failed to fetch posts", error);
@@ -63,7 +63,7 @@ export default function NewsFeed() {
           headers: {
             Authorization: token as string,
           },
-        }
+        },
       );
 
       setSearchData(data);
@@ -74,7 +74,7 @@ export default function NewsFeed() {
           headers: {
             Authorization: token as string,
           },
-        }
+        },
       );
 
       setSearchData(data);
@@ -86,6 +86,7 @@ export default function NewsFeed() {
     const handleScroll = () => {
       if (observerRef.current) {
         const { bottom } = observerRef.current.getBoundingClientRect();
+
         if (bottom <= window.innerHeight && !isLoading) {
           setPage((prevPage) => prevPage + 1);
         }
@@ -106,17 +107,7 @@ export default function NewsFeed() {
   return (
     <section>
       {posts.length === 0 && searchposts.length === 0 ? (
-        <section className=" flex flex-col justify-center items-center">
-          <p className=" font-serif text-4xl text-red-600">
-            There is no post here! 😢
-          </p>
-          <Link
-            className="bg-blue-400 p-2 mt-8 rounded text-white"
-            href="/login"
-          >
-            Log in now
-          </Link>
-        </section>
+        ""
       ) : (
         <main className="flex flex-col gap-y-2 relative">
           <div

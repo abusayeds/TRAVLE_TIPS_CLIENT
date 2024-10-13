@@ -8,6 +8,8 @@ import ForgetPasswordModel from "../forgetPassword/page";
 import PasswordChangeModal from "../changePasseord/page";
 
 import { useUserLogin } from "@/src/components/hooks/auth.hooks";
+import { delay } from "@/src/components/utils/delay";
+import Loading from "@/src/components/loading";
 
 const LoginPage = () => {
   const { mutate: handleUserLogin, isPending, isSuccess } = useUserLogin();
@@ -15,18 +17,21 @@ const LoginPage = () => {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setSetPassword] = useState("123456");
-
+  const [isLoding, setIsLoading] = useState(false);
   const redirect = redirectParams.get("redirect");
   const [openPasswordModal, setPasswordModal] = useState(false);
   const [openPasswordChangeModal, setPasswordChangeModal] = useState(false);
 
   const hendleSummit = async () => {
+    setIsLoading(true);
     const data = {
       email: email,
       password: password,
     };
 
     handleUserLogin(data);
+    await delay(1000, true);
+    setIsLoading(false);
   };
 
   if (!isPending && isSuccess) {
@@ -48,6 +53,7 @@ const LoginPage = () => {
 
   return (
     <div className="font-[sans-serif]">
+      {isLoding && <Loading />}
       {openPasswordModal && <ForgetPasswordModel />}
       {openPasswordChangeModal && <PasswordChangeModal />}
       <div className="min-h-screen flex flex-col items-center justify-center">
@@ -57,7 +63,7 @@ const LoginPage = () => {
               <div className="mb-12">
                 <h3 className=" text-3xl font-extrabold">Sign in</h3>
                 <p className="text-sm mt-4 ">
-                  Don't have an account{" "}
+                  Don,t have an account
                   <Link
                     className="text-blue-600 font-semibold hover:underline ml-1 whitespace-nowrap"
                     href="register"

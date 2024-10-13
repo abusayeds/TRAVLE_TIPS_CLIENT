@@ -6,16 +6,12 @@ import {
   NavbarMenuToggle,
   NavbarBrand,
   NavbarItem,
-  NavbarMenuItem,
 } from "@nextui-org/navbar";
 import { Link } from "@nextui-org/link";
-import { link as linkStyles } from "@nextui-org/theme";
 import NextLink from "next/link";
-import clsx from "clsx";
 
 import { useUser } from "./context/context.providet";
 
-import { siteConfig } from "@/src/config/site";
 import { ThemeSwitch } from "@/src/components/theme-switch";
 
 export const Navbar = () => {
@@ -27,27 +23,25 @@ export const Navbar = () => {
       maxWidth="xl"
       position="sticky"
     >
-      <NavbarContent className="basis-1/5 sm:basis-full" justify="start">
+      <NavbarContent className="basis-1/5 sm:basis-full  " justify="start">
         <NavbarBrand as="li" className="gap-3 max-w-fit">
           <NextLink className="flex justify-start items-center gap-1" href="/">
             <p className="font-bold text-inherit md:text-2xl">Travel Tips</p>
           </NextLink>
         </NavbarBrand>
-        <ul className="hidden lg:flex gap-4 justify-start ml-2">
-          {siteConfig.navItems.map((item) => (
-            <NavbarItem key={item.href}>
-              <NextLink
-                className={clsx(
-                  linkStyles({ color: "foreground" }),
-                  "data-[active=true]:text-primary data-[active=true]:font-medium"
-                )}
-                color="foreground"
-                href={item.href}
-              >
-                {item.label}
-              </NextLink>
-            </NavbarItem>
-          ))}
+        <ul className="hidden lg:flex gap-4 mt-2  justify-center items-center ml-2">
+          {user?.data?.role === "USER" && (
+            <Link className="text-black font-titlefont" href="/newsFeed">
+              News Feed
+            </Link>
+          )}
+
+          <Link className="text-black font-titlefont" href="/about">
+            About
+          </Link>
+          <Link className="text-black font-titlefont" href="/contact">
+            Contact
+          </Link>
         </ul>
       </NavbarContent>
 
@@ -90,23 +84,18 @@ export const Navbar = () => {
 
       <NavbarMenu>
         <div className="mx-4 mt-2 flex flex-col gap-2">
-          {siteConfig.navMenuItems.map((item, index) => (
-            <NavbarMenuItem key={`${item}-${index}`}>
-              <Link
-                color={
-                  index === 2
-                    ? "primary"
-                    : index === siteConfig.navMenuItems.length - 1
-                      ? "danger"
-                      : "foreground"
-                }
-                href="#"
-                size="lg"
-              >
-                {item.label}
-              </Link>
-            </NavbarMenuItem>
-          ))}
+          {user?.data?.role === "USER" && (
+            <Link className="text-black font-titlefont" href="/newsFeed">
+              News Feed
+            </Link>
+          )}
+
+          <Link className="text-black font-titlefont" href="/about">
+            About
+          </Link>
+          <Link className="text-black font-titlefont" href="/contact">
+            Contact
+          </Link>
         </div>
       </NavbarMenu>
     </NextUINavbar>

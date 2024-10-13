@@ -20,7 +20,7 @@ const ForgetPasswordModel = () => {
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [passwordsMatch, setPasswordsMatch] = useState(true);
-  const [confirmPasswordTouched, setConfirmPasswordTouched] = useState(false);
+  const [setConfirmPasswordTouched] = useState(false);
 
   const handleForgetPassword = async (e: React.FormEvent) => {
     e.preventDefault(); // Prevent page reload

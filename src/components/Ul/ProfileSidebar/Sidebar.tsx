@@ -14,6 +14,7 @@ import { logout } from "../../services/authServices";
 import { useUser } from "../../context/context.providet";
 import { useMyPost } from "../../hooks/post.hook";
 import { getToken } from "../../utils/getToken";
+import { delay } from "../../utils/delay";
 
 import { SidebarOptions } from "./SideberOptions";
 import { adminLinks, userLinks } from "./constant";
@@ -31,8 +32,9 @@ const Sideber = () => {
   const [ImgUploadLoading, setImgUploadloding] = useState(false);
   const pathName = usePathname();
   const [isModalVisible, setIsModalVisible] = useState(false);
-
-  const handleLogOut = () => {
+  const [loding, setLoding] = useState(false);
+  const handleLogOut = async () => {
+    setLoding(true);
     logout();
     localStorage.removeItem("voteStatus");
     setUser(null);
@@ -40,6 +42,8 @@ const Sideber = () => {
     if (protectedRoutes.some((route) => pathName.match(route))) {
       router.push("/");
     }
+    await delay(2000, true);
+    setLoding(false);
   };
 
   const uploadProfileImage = async (e: any) => {
@@ -152,7 +156,7 @@ const Sideber = () => {
 
   return (
     <div>
-      {/* {isPending && <Loading />} */}
+      {loding && <Loading />}
       {ImgUploadLoading && <Loading />}
       <PostCreationModal isVisible={isModalVisible} onClose={closeModal} />
       <div className="rounded-xl  bg-default-200 p-2 font-titlefont">

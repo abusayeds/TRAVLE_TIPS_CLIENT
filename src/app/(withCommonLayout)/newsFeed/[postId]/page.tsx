@@ -16,6 +16,8 @@ const Detailpage = ({ params: { postId } }: IProps) => {
 
   const posts = data?.data || [];
 
+  console.log({ posts });
+
   const fetchPost = async () => {
     const token = await getToken();
 
@@ -39,7 +41,7 @@ const Detailpage = ({ params: { postId } }: IProps) => {
   }, []);
 
   return (
-    <div className=" flex flex-col gap-y-6  w-1/2 mx-auto ">
+    <div className=" flex flex-col gap-y-6  md:w-1/2 mx-auto ">
       {posts ? (
         <Post fetchPost={fetchPost} post={posts} singlePostDetials={true} />
       ) : (

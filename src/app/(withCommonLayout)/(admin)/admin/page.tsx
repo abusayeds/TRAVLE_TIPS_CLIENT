@@ -1,9 +1,11 @@
 import React from "react";
 
+import NewsFeed from "../../newsFeed/page";
+
 const AdminPage = () => {
   return (
     <div>
-      <p>this is admin AdminPage hrar in naoe </p>
+      <NewsFeed />
     </div>
   );
 };

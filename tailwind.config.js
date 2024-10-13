@@ -1,18 +1,20 @@
-import {nextui} from '@nextui-org/theme'
+import { nextui } from "@nextui-org/theme";
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: [
-    './src/components/**/*.{js,ts,jsx,tsx,mdx}',
-    './src/app/**/*.{js,ts,jsx,tsx,mdx}',
-    './node_modules/@nextui-org/theme/dist/**/*.{js,ts,jsx,tsx}'
+    "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
+    "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
+    "./node_modules/@nextui-org/theme/dist/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
     extend: {
       fontFamily: {
-        
         bodyfont: ["Poppins", "sans-serif"],
         titlefont: ["Montserrat", "sans-serif"],
+      },
+      animation: {
+        pulse: "pulse 1s ease-in-out infinite",
       },
       colors: {
         bodyColor: "#212428",
@@ -20,8 +22,14 @@ module.exports = {
         boxBg: "linear-gradient(145deg, #1e2024, #23272b)",
         designColor: "#ff014f",
       },
+      keyframes: {
+        pulse: {
+          "0%, 100%": { transform: "scale(1)" },
+          "50%": { transform: "scale(1.05)" },
+        },
+      },
     },
   },
   darkMode: "class",
   plugins: [nextui()],
-}
+};

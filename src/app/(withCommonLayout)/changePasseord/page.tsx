@@ -15,7 +15,7 @@ const PasswordChangeModal = () => {
   const [confirmPassword, setConfirmPassword] = useState(" ");
   const [oldPassword, setOldPassword] = useState(" ");
   const [passwordsMatch, setPasswordsMatch] = useState(true);
-  const [confirmPasswordTouched, setConfirmPasswordTouched] = useState(false);
+  const [setConfirmPasswordTouched] = useState(false);
 
   const handleNewPasswordChange = (e: any) => {
     setNewPassword(e.target.value);

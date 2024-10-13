@@ -26,6 +26,7 @@ import {
   monthlyPaymentsData,
   userLinks,
 } from "../ProfileSidebar/constant";
+import { delay } from "../../utils/delay";
 
 import { protectedRoutes } from "@/src/constant";
 import { baseAPI, CLIENT_API_KEY } from "@/src/config/envConfig";
@@ -37,7 +38,7 @@ const AdminSidebar = () => {
   const [ImgUploadLoading, setImgUploadloding] = useState(false);
   const pathName = usePathname();
 
-  const handleLogOut = () => {
+  const handleLogOut = async () => {
     logout();
     localStorage.removeItem("voteStatus");
     setUser(null);
@@ -45,6 +46,7 @@ const AdminSidebar = () => {
     if (protectedRoutes.some((route) => pathName.match(route))) {
       router.push("/");
     }
+    await delay(1000, true);
   };
 
   const uploadProfileImage = async (e: any) => {

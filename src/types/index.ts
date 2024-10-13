@@ -16,7 +16,7 @@ export interface IInput {
   name: string;
 }
 
-type Tcommmon = {
+export type Tcommmon = {
   _id: string;
   name: string;
   role: string;
@@ -38,7 +38,7 @@ type Tcommmon = {
 };
 export interface IUser {
     data?: {
-    _id: string;
+    _id: any;
     name: string;
     role: string;
     user?: Tcommmon;

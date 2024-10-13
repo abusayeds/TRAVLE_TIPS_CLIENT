@@ -37,7 +37,7 @@ const Contact = () => {
           initial={{ opacity: 0 }}
           transition={{ delay: 0.3, duration: 1 }}
         >
-          Have any questions or need help? Reach out to us and we'll get back to
+          Have any questions or need help? Reach out to us and we ll get back to
           you soon!
         </motion.p>
 

@@ -64,7 +64,7 @@ const Register = () => {
               <div className="mb-12">
                 <h3 className=" text-3xl font-serif font-extrabold">Sign in</h3>
                 <p className="text-sm mt-4 font-sans ">
-                  Don't have an account{" "}
+                  Don t have an account{" "}
                   <Link
                     className="text-blue-600 font-semibold underline ml-1  whitespace-nowrap"
                     href="login"

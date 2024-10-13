@@ -236,21 +236,25 @@ const Post = ({ singlePostDetials = false, post, fetchPost }: TProps) => {
               </h2>
               {user?.data?.email !== post?.user?.email && (
                 <div>
-                  {isFollowing ? (
-                    <button
-                      className="flex items-center justify-center gap-1 border text-xs font-semibold border-gray-300 transition duration-300 ease-in-out w-20 px-3 py-1 rounded-md shadow-sm"
-                      onClick={handleUnfollowClick}
-                    >
-                      Unfollow
-                    </button>
-                  ) : (
-                    <button
-                      className="flex items-center justify-center gap-1 border text-xs font-semibold border-gray-300 transition duration-300 ease-in-out w-20 px-3 py-1 rounded-md shadow-sm"
-                      onClick={handleFollowClick}
-                    >
-                      <FaUserPlus />
-                      Follow
-                    </button>
+                  {user?.data?.role === "USER" && (
+                    <>
+                      {isFollowing ? (
+                        <button
+                          className="flex items-center justify-center gap-1 border text-xs font-semibold border-gray-300 transition duration-300 ease-in-out w-20 px-3 py-1 rounded-md shadow-sm"
+                          onClick={handleUnfollowClick}
+                        >
+                          Unfollow
+                        </button>
+                      ) : (
+                        <button
+                          className="flex items-center justify-center gap-1 border text-xs font-semibold border-gray-300 transition duration-300 ease-in-out w-20 px-3 py-1 rounded-md shadow-sm"
+                          onClick={handleFollowClick}
+                        >
+                          <FaUserPlus />
+                          Follow
+                        </button>
+                      )}
+                    </>
                   )}
                 </div>
               )}

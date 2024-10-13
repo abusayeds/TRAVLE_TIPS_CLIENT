@@ -1,11 +1,11 @@
 import React from "react";
 
-const page = () => {
+const AdminPage = () => {
   return (
     <div>
-      <p> this is admin page </p>
+      <p>this is admin AdminPage hrar in naoe </p>
     </div>
   );
 };
 
-export default page;
+export default AdminPage;

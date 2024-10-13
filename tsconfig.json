@@ -23,6 +23,6 @@
       "@/src/*": ["./src/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/app/(withCommonLayout)/newsfeeds/layout.tsx"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/app/(withCommonLayout)/newsfeeds/layout.tsx", "src/app/(withCommonLayout)/(admin)/admin/paymentUser/page.tsx"],
   "exclude": ["node_modules"]
 }

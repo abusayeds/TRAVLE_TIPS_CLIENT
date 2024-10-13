@@ -12,7 +12,6 @@ import { Link } from "@nextui-org/link";
 import { link as linkStyles } from "@nextui-org/theme";
 import NextLink from "next/link";
 import clsx from "clsx";
-import { useEffect } from "react";
 
 import { useUser } from "./context/context.providet";
 
@@ -20,11 +19,7 @@ import { siteConfig } from "@/src/config/site";
 import { ThemeSwitch } from "@/src/components/theme-switch";
 
 export const Navbar = () => {
-  const { user, reFactehUser, setSearch, search } = useUser();
-
-  useEffect(() => {
-    reFactehUser();
-  }, []);
+  const { user, setSearch, search } = useUser();
 
   return (
     <NextUINavbar
@@ -65,8 +60,13 @@ export const Navbar = () => {
             <button onClick={() => setSearch(!search)}>Search</button>
           )}
           <ThemeSwitch />
-          {user?.data?.email ? (
-            <Link href="/profile">Profile</Link>
+          {user ? (
+            <div>
+              {user?.data?.role === "ADMIN" && <Link href="/admin">Admin</Link>}
+              {user?.data?.role === "USER" && (
+                <Link href="/profile">Profile</Link>
+              )}
+            </div>
           ) : (
             <Link href="/login">Login</Link>
           )}

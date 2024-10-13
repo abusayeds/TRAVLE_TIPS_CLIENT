@@ -30,7 +30,7 @@ const About = () => {
                   Explore New Horizons with Us
                 </h2>
                 <p className=" text-base font-normal leading-relaxed lg:text-start text-center">
-                  Whether it's an adventure into the wild, a business trip for
+                  Whether it s an adventure into the wild, a business trip for
                   success, or a journey of exploration, we provide unmatched
                   experiences tailored to your desires. Let us take you beyond
                   your expectations.
@@ -66,7 +66,6 @@ const About = () => {
               </div>
             </div>
 
-          
             <button className="sm:w-fit w-full px-3.5 py-2 bg-indigo-600 hover:bg-indigo-800 transition-all duration-700 ease-in-out rounded-lg shadow-[0px_1px_2px_0px_rgba(16,_24,_40,_0.05)] justify-center items-center flex">
               <span className="px-1.5 text-sm font-medium leading-6">
                 Read More
@@ -75,7 +74,6 @@ const About = () => {
           </div>
         </div>
 
-       
         <div className="mt-16 w-full grid lg:grid-cols-3 grid-cols-1 gap-12">
           <div className="flex flex-col items-center bg-white rounded-lg shadow-lg p-6">
             <img
@@ -144,16 +142,14 @@ const About = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
-          <h3 className="text-3xl font-bold">
-            Explore Our Destinations
-          </h3>
+          <h3 className="text-3xl font-bold">Explore Our Destinations</h3>
           <motion.p
             className=" text-base mb-8 text-center"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.2 }}
           >
-            Use the interactive map to discover the places we've traveled to.
+            Use the interactive map to discover the places we ve traveled to.
           </motion.p>
           <motion.div
             className="w-full h-80 bg-gray-200 rounded-lg overflow-hidden"

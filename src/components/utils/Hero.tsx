@@ -42,13 +42,11 @@ const Hero: React.FC = () => {
         }`}
       >
         <div className="text-center">
-          <p className="uppercase font-bodyfont">
-            There is no post here!
-          </p>
+          <p className="uppercase font-bodyfont">There is no post here!</p>
         </div>
         <Link
-          href="/login"
           className="font-titlefont uppercase bg-designColor opacity-80 hover:opacity-100 p-4 rounded transition-opacity"
+          href="/login"
         >
           Log in now!
         </Link>

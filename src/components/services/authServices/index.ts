@@ -3,6 +3,8 @@
 import { FieldValues } from "react-hook-form";
 import { cookies } from "next/headers";
 import { jwtDecode } from "jwt-decode";
+import { toast } from "sonner";
+import axios from "axios";
 
 import axiosInastances from "../../lib/AxiosInstance";
 
@@ -23,9 +25,16 @@ export const loginUser = async (userData: FieldValues) => {
       cookies().set("accessToken", data?.token);
     }
 
-    return data;
-  } catch (err: any) {
-    throw new Error(err);
+    if (data?.data?.success) {
+      toast.success(data.data.message);
+    }
+  } catch (error) {
+    const axiosError = error as any;
+
+    console.log(axios);
+    console.log("grt to error");
+
+    toast.error(axiosError?.response?.data?.message);
   }
 };
 export const logout = () => {

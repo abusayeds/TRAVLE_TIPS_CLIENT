@@ -1,36 +1,41 @@
 "use client";
 import { Button } from "@nextui-org/button";
 import Link from "next/link";
-import { MdEdit } from "react-icons/md";
 import { usePathname, useRouter } from "next/navigation";
 import { FaCamera } from "react-icons/fa";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { TbPremiumRights } from "react-icons/tb";
-import { RiVerifiedBadgeFill } from "react-icons/ri";
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+} from "recharts";
 
 import Loading from "../../loading";
 import { logout } from "../../services/authServices";
 import { useUser } from "../../context/context.providet";
-import { useMyPost } from "../../hooks/post.hook";
 import { getToken } from "../../utils/getToken";
-
-import { SidebarOptions } from "./SideberOptions";
-import { adminLinks, userLinks } from "./constant";
+import { SidebarOptions } from "../ProfileSidebar/SideberOptions";
+import {
+  adminLinks,
+  monthlyPaymentsData,
+  userLinks,
+} from "../ProfileSidebar/constant";
 
 import { protectedRoutes } from "@/src/constant";
 import { baseAPI, CLIENT_API_KEY } from "@/src/config/envConfig";
-import PostCreationModal from "@/src/app/(withCommonLayout)/(user)/profile/create-post/page";
 
-const Sideber = () => {
+const AdminSidebar = () => {
   const { user, reFactehUser, setUser } = useUser();
-  const { data } = useMyPost();
-  const [subTotalVote, setSubTotalVote] = useState(0);
 
   const router = useRouter();
   const [ImgUploadLoading, setImgUploadloding] = useState(false);
   const pathName = usePathname();
-  const [isModalVisible, setIsModalVisible] = useState(false);
 
   const handleLogOut = () => {
     logout();
@@ -114,37 +119,6 @@ const Sideber = () => {
       setImgUploadloding(false);
     }
   };
-  const openModal = () => {
-    setIsModalVisible(true);
-  };
-
-  const closeModal = () => {
-    setIsModalVisible(false);
-    router.push("/profile");
-    reFactehUser();
-  };
-
-  const handlePayment = async (id: any) => {
-    const res = await fetch(`${baseAPI}/payment/${id}`, {
-      method: "POST",
-    });
-    const data = await res.json();
-
-    if (data?.success) {
-      window.location.href = data?.data?.payment_url;
-    }
-  };
-
-  useEffect(() => {
-    if (data?.data && Array.isArray(data.data)) {
-      const total = data.data.reduce((acc: any, item: any) => {
-        return acc + (item.totalVote || 0);
-      }, 0);
-
-      setSubTotalVote(total);
-    }
-    reFactehUser();
-  }, [data]);
 
   useEffect(() => {
     reFactehUser();
@@ -154,7 +128,7 @@ const Sideber = () => {
     <div>
       {/* {isPending && <Loading />} */}
       {ImgUploadLoading && <Loading />}
-      <PostCreationModal isVisible={isModalVisible} onClose={closeModal} />
+
       <div className="rounded-xl  bg-default-200 p-2 font-titlefont">
         <div className="w-full rounded-md">
           <div className="max-w-2xl  sm:max-w-sm md:max-w-sm lg:max-w-sm xl:max-w-sm sm:mx-auto md:mx-auto lg:mx-auto xl:mx-auto   shadow-xl rounded-lg ">
@@ -215,83 +189,57 @@ const Sideber = () => {
                 }}
               />
             </div>
-            <div className=" flex flex-col gap-y-3 p-2">
-              <div className=" flex flex-col gap-y-2">
-                <div className=" flex gap-3 items-center ">
-                  <p className="text-2xl font-serif font-semibold">
-                    {user?.data?.name}
-                  </p>
 
-                  {user?.data?.status === "BLOCKED" && (
-                    <RiVerifiedBadgeFill className=" text-blue-700 text-lg" />
-                  )}
-                </div>
-                {user?.data?.status !== "BLOCKED" && (
-                  <div>
-                    {subTotalVote > 0 && (
-                      <button
-                        className=" flex items-center w-24 gap-1 rounded bg-black text-white text-xs px-2 py-[0.5]"
-                        onClick={() => handlePayment(user?.data?._id)}
-                      >
-                        Premium <TbPremiumRights />{" "}
-                      </button>
-                    )}
-                  </div>
-                )}
-              </div>
-              <div className="break-words  md:text-sm flex md:gap-5 gap-x-2">
-                <Link className="text-sm" href={"/profile"}>
-                  <span className="  underline">
-                    {" "}
-                    Post {data?.data?.length}{" "}
-                  </span>
-                </Link>
-                <Link className="text-sm" href={"/profile/follower"}>
-                  <span className=" underline"> Followers</span>{" "}
-                  <span>{user?.data?.follower?.length}</span>
-                </Link>
-                <Link className="text-sm" href={"/profile/following"}>
-                  <span className=" underline">
-                    Following {user?.data?.following?.length}{" "}
-                  </span>{" "}
-                </Link>
-              </div>
+            <div className=" flex gap-3 items-center p-2 ">
+              <p className="text-3xl font-serif font-semibold">
+                {user?.data?.name}{" "}
+                <small className=" text-xs">
+                  ( <span>{user?.data?.role}</span>)
+                </small>
+              </p>
             </div>
           </div>
-        </div>
-
-        <div className="mt-2 w-full rounded-md flex  justify-around items-center gap-2 ">
-          <Button
-            as={Link}
-            className=" text-xs w-full font-bodyfont "
-            color="primary"
-            href={"/profile/create-post"}
-            size="sm"
-            variant="solid"
-            onClick={() => openModal()}
-          >
-            + Add to post
-          </Button>
-          <Button
-            as={Link}
-            className="  font-bodyfont w-full text-x"
-            color="primary"
-            endContent={<MdEdit />}
-            href={"/profile/edit-profile"}
-            size="sm"
-            variant="flat"
-          >
-            Edit Profile
-          </Button>
-          <Button color="primary" size="sm" variant="light">
-            ....
-          </Button>
         </div>
         <div className="mt-3 space-y-2 rounded-xl bg-default-300 p-2">
           <SidebarOptions
             links={user?.data?.role === "USER" ? userLinks : adminLinks}
           />
-
+          <div className="flex flex-col gap-1">
+            <Button
+              as={Link}
+              className="mt-2 w-full rounded-md bg-default-200"
+              href="/admin/activeUser"
+            >
+              Active user
+            </Button>
+          </div>
+          <div className="flex flex-col gap-1">
+            <Button
+              as={Link}
+              className="mt-2 w-full rounded-md bg-default-200"
+              href="/admin/paymentUser"
+            >
+              Paymet user
+            </Button>
+          </div>
+          <div className="mt-4 p-4 bg-default-300 rounded-lg">
+            <h2 className="text-lg font-bold mb-2">Monthly Payments</h2>
+            <ResponsiveContainer height={200} width="100%">
+              <LineChart data={monthlyPaymentsData}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="month" />
+                <YAxis />
+                <Tooltip />
+                <Legend />
+                <Line
+                  activeDot={{ r: 8 }}
+                  dataKey="payments"
+                  stroke="#8884d8"
+                  type="monotone"
+                />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
           <Button
             className="mt-2 w-full rounded-md font-titlefont"
             color="danger"
@@ -305,4 +253,4 @@ const Sideber = () => {
   );
 };
 
-export default Sideber;
+export default AdminSidebar;

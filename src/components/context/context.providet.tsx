@@ -16,19 +16,21 @@ import { verifyToken } from "../utils/VerifyToken";
 
 interface IUserProviderValues {
   user: IUser | null;
-  
+  token: string | undefined;
   isLoading: boolean;
   setUser: (user: IUser | null) => void;
   setIsLoading: Dispatch<SetStateAction<boolean>>;
   reFactehUser: () => Promise<void>;
   search: boolean;
   setSearch: Dispatch<SetStateAction<boolean>>;
+  setToken: Dispatch<SetStateAction<string | undefined>>;
 }
 
 const UserContext = createContext<IUserProviderValues | null>(null);
 
 const UserProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<IUser | null>(null);
+  const [token, setToken] = useState<string | undefined>("");
   const [search, setSearch] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -40,7 +42,7 @@ const UserProvider = ({ children }: { children: ReactNode }) => {
       res = verifyToken(token as string);
     }
     try {
-      const { data } = await axios.get(`${baseAPI}/single-user/${res!.id}`, {
+      const { data } = await axios.get(`${baseAPI}/single-user/${res?.id}`, {
         headers: {
           Authorization: token as string,
         },
@@ -52,16 +54,17 @@ const UserProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  // useEffect to call reFactehUser when isLoading changes
   useEffect(() => {
     if (isLoading) {
-      reFactehUser().then(() => setIsLoading(false)); // Optionally, set loading to false after the fetch
+      reFactehUser().then(() => setIsLoading(false));
     }
-  }, [isLoading, user]); // reFactehUser will be called whenever isLoading changes
+  }, [isLoading, user]);
 
   return (
     <UserContext.Provider
       value={{
+        token,
+        setToken,
         reFactehUser,
         user,
         setUser,

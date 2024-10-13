@@ -46,7 +46,7 @@ export const useUserLogin = () => {
       });
     },
     onError: (error) => {
-      toast.error(error.message);
+      toast.message("something is wrong 😢");
     },
   });
 };

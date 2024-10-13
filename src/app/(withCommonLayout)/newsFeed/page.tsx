@@ -1,36 +1,32 @@
 "use client";
 
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { FaSearch } from "react-icons/fa";
-
+import Link from "next/link";
 import Post from "@/src/components/Ul/post/Post";
 import { getToken } from "@/src/components/utils/getToken";
 import { baseAPI } from "@/src/config/envConfig";
 import { IReceivedPost, TPost } from "@/src/types";
 import { useUser } from "@/src/components/context/context.providet";
-import Hero from "@/src/components/utils/Hero";
-import Link from "next/link";
-const images = [
-  { src: "/images/travel1.jpg", text: "Discover new places" },
-  { src: "/images/travel2.jpg", text: "Adventure awaits" },
-  { src: "/images/travel3.jpg", text: "Explore the world" },
-];
 
 export default function NewsFeed() {
   const { search } = useUser();
-  const [data, setData] = useState<TPost | null>(null);
   const [searchdata, setSearchData] = useState<TPost | null>(null);
-
-  const posts = data?.data || [];
   const searchposts = searchdata?.data || [];
+  const [data, setData] = useState<TPost | null>(null);
+  const [page, setPage] = useState<number>(1); // To track the current page
+  const [isLoading, setIsLoading] = useState<boolean>(false); // To prevent multiple fetches
+  const posts = data?.data || [];
+  const observerRef = useRef<HTMLDivElement | null>(null); // Ref to observe scrolling
 
-  const fetchPost = async () => {
+  const fetchPost = async (pageNum = 1) => {
     const token = await getToken();
 
     try {
+      setIsLoading(true);
       const { data } = await axios.get(
-        `${baseAPI}/all-post?sort=-totalVote&page`,
+        `${baseAPI}/all-post?sort=-totalVote&page=${pageNum}`,
         {
           headers: {
             Authorization: token as string,
@@ -38,9 +34,18 @@ export default function NewsFeed() {
         }
       );
 
-      setData(data);
+      // Append new data to existing posts
+      setData(
+        (prevData) =>
+          ({
+            ...prevData,
+            data: prevData ? [...prevData.data, ...data.data] : data.data,
+          }) as any
+      );
     } catch (error) {
       console.error("Failed to fetch posts", error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -76,16 +81,41 @@ export default function NewsFeed() {
     }
   };
 
+  // Infinite scroll handler
   useEffect(() => {
-    fetchPost();
-  }, []);
+    const handleScroll = () => {
+      if (observerRef.current) {
+        const { bottom } = observerRef.current.getBoundingClientRect();
+        if (bottom <= window.innerHeight && !isLoading) {
+          setPage((prevPage) => prevPage + 1);
+        }
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, [isLoading]);
+
+  useEffect(() => {
+    fetchPost(page); // Fetch posts when page number changes
+  }, [page]);
 
   return (
     <section>
       {posts.length === 0 && searchposts.length === 0 ? (
         <section className=" flex flex-col justify-center items-center">
-          <p className=" font-serif text-4xl text-red-600">There is no post hear !  😢 </p>
-          <Link className="bg-blue-400 p-2 mt-8 rounded text-white" href="/login"> Log in now </Link>
+          <p className=" font-serif text-4xl text-red-600">
+            There is no post here! 😢
+          </p>
+          <Link
+            className="bg-blue-400 p-2 mt-8 rounded text-white"
+            href="/login"
+          >
+            Log in now
+          </Link>
         </section>
       ) : (
         <main className="flex flex-col gap-y-2 relative">
@@ -126,6 +156,9 @@ export default function NewsFeed() {
                   <Post key={index} fetchPost={fetchPost} post={post} />
                 ))}
           </div>
+          {/* Observer div to detect scrolling */}
+          <div ref={observerRef} className="h-10" />
+          {isLoading && <p>Loading more posts...</p>}
         </main>
       )}
     </section>

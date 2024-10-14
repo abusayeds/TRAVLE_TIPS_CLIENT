@@ -1,53 +1,32 @@
-# Next.js & NextUI Template
+# Travel Tips Project
 
-This is a template for creating applications using Next.js 14 (app directory) and NextUI (v2).
+## Overview
 
-[Try it on CodeSandbox](https://githubbox.com/nextui-org/next-app-template)
+The Travel Tips Project is a social media-like platform where users can share and discover travel tips. Users can log in, manage their profiles, and perform CRUD operations on posts. This platform also includes an admin dashboard for managing user details and payments.
 
-## Technologies Used
+## Features
 
-- [Next.js 14](https://nextjs.org/docs/getting-started)
-- [NextUI v2](https://nextui.org/)
-- [Tailwind CSS](https://tailwindcss.com/)
-- [Tailwind Variants](https://tailwind-variants.org)
-- [TypeScript](https://www.typescriptlang.org/)
-- [Framer Motion](https://www.framer.com/motion/)
-- [next-themes](https://github.com/pacocoursey/next-themes)
+- **User Authentication**:
+  - Login, logout, and registration.
+  - Password management (change, forget, reset).
+- **Post Management**:
+  - Create, read, update, and delete (CRUD) posts.
+  - Comment on posts.
+  - Like or unlike posts.
+- **User Profiles**:
+  - View and update user profiles.
+- **Social Interactions**:
 
-## How to Use
+  - Follow and unfollow other users.
 
-### Use the template with create-next-app
+- **Admin Dashboard**:
 
-To create a new project based on this template using `create-next-app`, run the following command:
+  - View user details.
+  - Manage payments.
 
-```bash
-npx create-next-app -e https://github.com/nextui-org/next-app-template
-```
+- **Payment Integration**:
+  - Users can make payments using **AmarPay**.
 
-### Install dependencies
+### Key Updates:
 
-You can use one of them `npm`, `yarn`, `pnpm`, `bun`, Example using `npm`:
-
-```bash
-npm install
-```
-
-### Run the development server
-
-```bash
-npm run dev
-```
-
-### Setup pnpm (optional)
-
-If you are using `pnpm`, you need to add the following code to your `.npmrc` file:
-
-```bash
-public-hoist-pattern[]=*@nextui-org/*
-```
-
-After modifying the `.npmrc` file, you need to run `pnpm install` again to ensure that the dependencies are installed correctly.
-
-## License
-
-Licensed under the [MIT license](https://github.com/nextui-org/next-app-template/blob/main/LICENSE).
+- **Running the Project Locally**: Added a new section with steps on how to run the project, including the command `npm run dev` and the URL to access it.
